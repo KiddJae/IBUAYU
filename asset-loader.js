@@ -1,10 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    // Fix <img> tags
+  function fixAssets() {
+
     document.querySelectorAll("img").forEach(img => {
       let src = img.getAttribute("src");
-  
-      // Ignore external links or already-correct paths
+
       if (
         src &&
         !src.startsWith("http") &&
@@ -15,11 +15,10 @@ document.addEventListener("DOMContentLoaded", function () {
         img.setAttribute("src", "assets/" + src);
       }
     });
-  
-    // Fix <video> sources
+
     document.querySelectorAll("video source").forEach(source => {
       let src = source.getAttribute("src");
-  
+
       if (
         src &&
         !src.startsWith("http") &&
@@ -30,5 +29,14 @@ document.addEventListener("DOMContentLoaded", function () {
         source.setAttribute("src", "assets/" + src);
       }
     });
-  
-  });
+
+  }
+
+  // Run once
+  fixAssets();
+
+  // Run again whenever DOM changes (important!)
+  const observer = new MutationObserver(fixAssets);
+  observer.observe(document.body, { childList: true, subtree: true });
+
+});
