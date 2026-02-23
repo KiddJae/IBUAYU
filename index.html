@@ -409,15 +409,27 @@
 
         .hero-image { position: relative; z-index: 1; }
 
-        .hero-image img {
+        .hero-image img,
+        .hero-image .img-wrap img {
             width: 100%;
             border-radius: 20px;
             box-shadow: 0 30px 60px rgba(0,0,0,0.5);
             transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
-            transition: transform 0.5s ease;
+            transition: transform 0.5s ease, opacity 0.35s ease;
+            opacity: 1 !important; /* always visible, no shimmer fade-in */
+        }
+        /* Hero image: no shimmer box — transparent background */
+        .hero-image .img-wrap {
+            background: transparent !important;
+            border-radius: 20px;
+            overflow: visible;
+        }
+        .hero-image .img-wrap::before {
+            display: none !important; /* no shimmer on hero */
         }
 
-        .hero-image:hover img {
+        .hero-image:hover img,
+        .hero-image:hover .img-wrap img {
             transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
         }
 
@@ -572,6 +584,43 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
 
+        /* ===== IMAGE LOADING SHIMMER ===== */
+        @keyframes imgShimmer {
+            0%   { background-position: -600px 0; }
+            100% { background-position: 600px 0; }
+        }
+        .img-wrap {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            background: var(--background-light);
+        }
+        .img-wrap::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg,
+                var(--background-light) 0%,
+                rgba(212,165,116,0.18) 50%,
+                var(--background-light) 100%);
+            background-size: 600px 100%;
+            animation: imgShimmer 1.4s infinite linear;
+            z-index: 1;
+            transition: opacity 0.3s;
+        }
+        .img-wrap.loaded::before { opacity: 0; pointer-events: none; }
+        .img-wrap img {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+        .img-wrap.loaded img { opacity: 1; }
+
         .cake-image {
             width: 100%;
             height: 180px;
@@ -585,7 +634,9 @@
             transition: transform 0.5s ease;
         }
 
-        .cake-card:hover .cake-image img { transform: scale(1.05); }
+        .cake-card:hover .cake-image img,
+        .cake-card:hover .cake-image .img-wrap img { transform: scale(1.05); }
+
 
         .cake-info {
             padding: 15px;
@@ -679,7 +730,7 @@
         /* ===== PRODUCT DETAIL PAGE ===== */
         #productDetail { padding-top: 100px; padding-bottom: 60px; }
         .pd-container {
-            max-width: 1100px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 0 5%;
             display: grid;
@@ -691,7 +742,6 @@
         /* Back button spans both columns */
         .pd-back-btn {
             grid-column: 1 / -1;
-            margin-bottom: 4px;
             align-self: flex-start;
         }
         /* Card 1 spans full left column height */
@@ -739,6 +789,9 @@
             height: 100%;
             object-fit: cover;
         }
+        /* pd-slide uses img-wrap internally */
+        .pd-slide .img-wrap { border-radius: 0; }
+        .pd-slide .img-wrap img { transition: opacity 0.35s ease, transform 0s; }
         .pd-carousel-btn {
             position: absolute;
             top: 50%;
@@ -1865,14 +1918,17 @@
             position: relative;
         }
 
-        .pricing-image img {
+        .pricing-image img,
+        .pricing-image .img-wrap img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.5s ease;
         }
+        .pricing-image .img-wrap { width: 100%; height: 100%; }
 
-        .pricing-card:hover .pricing-image img { transform: scale(1.05); }
+        .pricing-card:hover .pricing-image img,
+        .pricing-card:hover .pricing-image .img-wrap img { transform: scale(1.05); }
 
         .pricing-image-icon { font-size: 5rem; opacity: 0.85; }
 
@@ -2926,7 +2982,11 @@
                         </div>
                     </div>
                     <div class="hero-image">
-                        <img src="FP.png" alt="Chocolate Cake">
+                        <div class="img-wrap" style="height:100%;">
+                            <img src="FP.png" alt="Chocolate Cake"
+                                 onload="this.parentElement.classList.add('loaded')"
+                                 onerror="this.parentElement.classList.add('loaded');this.style.opacity='1'">
+                        </div>
                     </div>
                 </div>
             </section>
@@ -2953,7 +3013,7 @@
                     <!-- Card 1: Tester Size -->
                     <div class="pricing-card" onclick="addToCart('Tester Size Chocolate moist', 1)">
                         <div class="pricing-image">
-                            <img src="RM2.jpeg" alt="Tester Size Chocolate Moist">
+                            <div class="img-wrap" style="height:100%;"><img src="RM2.jpeg" alt="Tester Size Chocolate Moist" onload="this.parentElement.classList.add('loaded')" onerror="this.parentElement.classList.add('loaded');this.style.opacity='1'"></div>
                         </div>
                         <div class="mob-overlay">
                             <span class="mob-title" data-i18n="p1_name">Tester Size</span>
@@ -2976,7 +3036,7 @@
                     <!-- Card 2: Signature Moist -->
                     <div class="pricing-card featured" onclick="addToCart('Signature Chocolate Moist', 15)">
                         <div class="pricing-image">
-                            <img src="RM15.jpeg" alt="Signature Chocolate Moist">
+                            <div class="img-wrap" style="height:100%;"><img src="RM15.jpeg" alt="Signature Chocolate Moist" onload="this.parentElement.classList.add('loaded')" onerror="this.parentElement.classList.add('loaded');this.style.opacity='1'"></div>
                             <span class="pricing-badge" data-i18n="badge_bestseller">Best Seller</span>
                         </div>
                         <div class="mob-overlay">
@@ -3000,7 +3060,7 @@
                     <!-- Card 3: Special Pre-Order -->
                     <div class="pricing-card" onclick="showCustomOrder('Special Order', 0)">
                         <div class="pricing-image">
-                            <img src="FP.png" alt="Special Pre-Order">
+                            <div class="img-wrap" style="height:100%;"><img src="FP.png" alt="Special Pre-Order" onload="this.parentElement.classList.add('loaded')" onerror="this.parentElement.classList.add('loaded');this.style.opacity='1'"></div>
                         </div>
                         <div class="mob-overlay">
                             <span class="mob-title" data-i18n="p3_name">Special Pre-Order</span>
@@ -3023,7 +3083,7 @@
                     <!-- Card 4: View All Cakes (mobile only) -->
                     <div class="pricing-card mob-view-all-card" onclick="showCakesPage()">
                         <div class="pricing-image">
-                            <img src="FP.png" alt="View All Cakes">
+                            <div class="img-wrap" style="height:100%;"><img src="FP.png" alt="View All Cakes" onload="this.parentElement.classList.add('loaded')" onerror="this.parentElement.classList.add('loaded');this.style.opacity='1'"></div>
                         </div>
                         <div class="mob-overlay">
                             <span class="mob-title">Ibu Ayu Cakes</span>
@@ -3039,14 +3099,14 @@
                     <!-- Left sub-grid: Tester Size + Special Pre-Order -->
                     <div class="mob-pricing-col">
                         <div class="pricing-card mob-card-tester" onclick="addToCart('Tester Size Chocolate moist', 1)">
-                            <div class="pricing-image"><img src="RM2.jpeg" alt="Tester Size"></div>
+                            <div class="pricing-image"><div class="img-wrap" style="height:100%;"><img src="RM2.jpeg" alt="Tester Size" onload="this.parentElement.classList.add('loaded')" onerror="this.parentElement.classList.add('loaded');this.style.opacity='1'"></div></div>
                             <div class="mob-overlay">
                                 <span class="mob-title" data-i18n="p1_name">Tester Size</span>
                                 <span class="mob-action" data-i18n="btn_addcart">Add to Cart</span>
                             </div>
                         </div>
                         <div class="pricing-card mob-card-special" onclick="showCustomOrder('Special Order', 0)">
-                            <div class="pricing-image"><img src="FP.png" alt="Special Pre-Order"></div>
+                            <div class="pricing-image"><div class="img-wrap" style="height:100%;"><img src="FP.png" alt="Special Pre-Order" onload="this.parentElement.classList.add('loaded')" onerror="this.parentElement.classList.add('loaded');this.style.opacity='1'"></div></div>
                             <div class="mob-overlay">
                                 <span class="mob-title" data-i18n="p3_name">Special Pre-Order</span>
                                 <span class="mob-action" data-i18n="btn_requestorder">Request Pre-Order</span>
@@ -3057,7 +3117,7 @@
                     <div class="mob-pricing-col">
                         <div class="pricing-card featured mob-card-signature" onclick="addToCart('Signature Chocolate Moist', 15)">
                             <div class="pricing-image">
-                                <img src="RM15.jpeg" alt="Signature Moist">
+                                <div class="img-wrap" style="height:100%;"><img src="RM15.jpeg" alt="Signature Moist" onload="this.parentElement.classList.add('loaded')" onerror="this.parentElement.classList.add('loaded');this.style.opacity='1'"></div>
                                 <span class="pricing-badge mob-badge-flame">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1C8 6 6 9.5 6 13a6 6 0 0 0 12 0c0-3.5-2-7-6-12zm0 17a3 3 0 0 1-3-3c0-1.8.9-3.5 3-6 2.1 2.5 3 4.2 3 6a3 3 0 0 1-3 3z"/></svg>
                                 </span>
@@ -3068,7 +3128,7 @@
                             </div>
                         </div>
                         <div class="pricing-card mob-card-viewall" onclick="showCakesPage()">
-                            <div class="pricing-image"><img src="FP.png" alt="View All Cakes"></div>
+                            <div class="pricing-image"><div class="img-wrap" style="height:100%;"><img src="FP.png" alt="View All Cakes" onload="this.parentElement.classList.add('loaded')" onerror="this.parentElement.classList.add('loaded');this.style.opacity='1'"></div></div>
                             <div class="mob-overlay">
                                 <span class="mob-title">Ibu Ayu Cakes</span>
                                 <span class="mob-action" data-i18n="btn_viewall">View All Cakes</span>
@@ -3092,7 +3152,7 @@
                             <p class="testimonial-author">- Mikael Jackson</p>
                         </div>
                         <div class="testi-img-panel">
-                            <img src="RM2.jpeg" alt="Chocolate Moist Tester">
+                            <div class="img-wrap" style="height:100%;"><img src="RM2.jpeg" alt="Chocolate Moist Tester" onload="this.parentElement.classList.add('loaded')" onerror="this.parentElement.classList.add('loaded');this.style.opacity='1'"></div>
                         </div>
                     </div>
 
@@ -3104,7 +3164,7 @@
                             <p class="testimonial-author">- Chrysanthemum Ronaldo</p>
                         </div>
                         <div class="testi-img-panel">
-                            <img src="RM15.jpeg" alt="Signature Chocolate Moist">
+                            <div class="img-wrap" style="height:100%;"><img src="RM15.jpeg" alt="Signature Chocolate Moist" onload="this.parentElement.classList.add('loaded')" onerror="this.parentElement.classList.add('loaded');this.style.opacity='1'"></div>
                         </div>
                     </div>
 
@@ -3116,7 +3176,7 @@
                             <p class="testimonial-author">- Ahmed Muhsin</p>
                         </div>
                         <div class="testi-img-panel">
-                            <img src="FP.png" alt="Full Package Cakes">
+                            <div class="img-wrap" style="height:100%;"><img src="FP.png" alt="Full Package Cakes" onload="this.parentElement.classList.add('loaded')" onerror="this.parentElement.classList.add('loaded');this.style.opacity='1'"></div>
                         </div>
                     </div>
 
@@ -3397,7 +3457,7 @@
                         <div class="pd-addons-section">
                             <h3 class="pd-addons-title" data-i18n="pd_addons">Product Add-Ons</h3>
                             <button class="pd-addon-trigger" onclick="openAddonPopup()">
-                                <img src="RM2.jpeg" alt="Birthday Pins" class="pd-addon-img">
+                                <div class="img-wrap" style="width:44px;height:44px;border-radius:8px;flex-shrink:0;"><img src="RM2.jpeg" alt="Birthday Pins" onload="this.parentElement.classList.add('loaded')" onerror="this.parentElement.classList.add('loaded');this.style.opacity='1'"></div>
                                 <div class="pd-addon-info">
                                     <span class="pd-addon-name" data-i18n="pd_addon1_name">Birthday Pins</span>
                                     <span class="pd-addon-sub">Tap to customise add-ons</span>
@@ -3503,13 +3563,13 @@
                     <img src="LOGO.png" alt="Ibu Ayu Logo" class="contact-logo-img">
                 </div>
                 <div class="contact-brand-name">IBU AYU</div>
-                <p class="contact-tagline">Premium Chocolate Moist, crafted with love since 2015. Ibu Ayu would love to hear from you!</p>
+                <p class="contact-tagline" data-i18n="contact_tagline">Fresh-Baked Chocolate Moist since 2015. Ibu Ayu would love to hear from you!</p>
             </div>
 
             <!-- Info strip + buttons -->
             <div class="contact-info-strip">
-                <h2>Get in Touch</h2>
-                <p>Have a question about Ibu Ayu's cakes, want to place a bulk order, or just want to say hello? Reach Ibu Ayu through any of the channels below — always happy to help.</p>
+                <h2 data-i18n="contact_title">Get in Touch</h2>
+                <p data-i18n="contact_desc">Have a question about Ibu Ayu's cakes, want to place a bulk order, or just want to say hello? Reach Ibu Ayu through any of the channels below — always happy to help.</p>
             </div>
 
             <div class="contact-buttons-row">
@@ -3568,21 +3628,21 @@
                 <span class="tab-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 </span>
-                <span class="tab-label">Home</span>
+                <span class="tab-label" data-i18n="tab_home">Home</span>
             </button>
             <!-- Cakes: circle + cross (matches hamburger cakes icon) -->
             <button class="tab-item" id="tab-cakes" onclick="switchTab('cakes')">
                 <span class="tab-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M12 8v8M8 12h8"/></svg>
                 </span>
-                <span class="tab-label">Cakes</span>
+                <span class="tab-label" data-i18n="tab_cakes">Cakes</span>
             </button>
             <!-- Contact: chat bubble (matches hamburger testimonials icon) -->
             <button class="tab-item" id="tab-contact" onclick="switchTab('contact')">
                 <span class="tab-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                 </span>
-                <span class="tab-label">Contact</span>
+                <span class="tab-label" data-i18n="tab_contact">Contact</span>
             </button>
         </div>
     </nav>
@@ -3668,28 +3728,28 @@
                 description: "1000ml, Large Chocolate Moist", volume: "1000ml — Large",
                 category: "Jumbo",
                 ingredients: {
-                    en: "Premium cocoa powder, wheat flour, sugar, butter, fresh eggs, full cream milk, baking powder, vanilla extract, dark chocolate chips.",
-                    ms: "Serbuk koko premium, tepung gandum, gula, mentega, telur segar, susu penuh krim, serbuk penaik, ekstrak vanila, cip coklat gelap."
+                    en: "Corn oil, condensed milk, fine sugar, wheat flour, cocoa powder, eggs, butter, fresh milk, vanilla essence, salt, baking powder, baking soda, whipping cream.",
+                    ms: "Minyak jagung, susu pekat, gula halus, tepung gandum, serbuk koko, telur, butter, susu cair, esen vanilla, garam, baking powder, baking soda, whipping cream."
                 },
                 allergen: {
-                    en: "Contains: Gluten (wheat), Dairy (milk, butter), Eggs. May contain traces of nuts. Suitable for vegetarians. Not suitable for those with gluten or dairy intolerance.",
-                    ms: "Mengandungi: Gluten (gandum), Tenusu (susu, mentega), Telur. Mungkin mengandungi kesan kacang. Sesuai untuk vegetarian. Tidak sesuai untuk mereka yang tidak toleran gluten atau tenusu."
+                    en: "Contains: Gluten (wheat flour), Dairy (milk, butter), Eggs.",
+                    ms: "Mengandungi: Gluten (tepung gandum), Tenusu (susu, butter), Telur."
                 },
                 care: {
-                    en: "Keep refrigerated at 0–4°C after collection. Allow the cake to sit at room temperature for 5–10 minutes before serving. Can be refrigerated for up to 2 days. Best consumed on the day of purchase.",
-                    ms: "Simpan dalam peti sejuk pada suhu 0–4°C selepas pengambilan. Biarkan kek pada suhu bilik selama 5–10 minit sebelum dihidangkan. Boleh disimpan dalam peti sejuk sehingga 2 hari. Terbaik dimakan pada hari pembelian."
+                    en: "Refrigerate: lasts approx. 4 days. Room temperature: lasts approx. 2 days.",
+                    ms: "Simpan dalam peti sejuk (Tahan 4+/- hari). Simpan di ruangan luar (Tahan 2+/- hari)."
                 },
                 orderInstr: {
-                    en: "Pre-order required at least 24 hours in advance. Place your order via WhatsApp or our website. Payment must be completed before production begins. Orders are confirmed only upon payment receipt.",
-                    ms: "Pra-tempahan diperlukan sekurang-kurangnya 24 jam lebih awal. Buat tempahan melalui WhatsApp atau laman web kami. Pembayaran mesti diselesaikan sebelum pengeluaran bermula. Tempahan hanya disahkan setelah pembayaran diterima."
+                    en: "Pre-order required at least 24 hours in advance. Order via WhatsApp or this website. Payment must be completed before production begins.",
+                    ms: "Pra-tempahan diperlukan sekurang-kurangnya 24 jam lebih awal. Buat tempahan melalui WhatsApp atau laman web ini. Pembayaran mesti diselesaikan sebelum pengeluaran bermula."
                 },
                 postage: {
-                    en: "Self-collection available at our outlet. Local delivery available within Klang Valley for a fee. Delivery times: Mon–Fri 10am–6pm, Sat–Sun 10am–3pm. Please ensure someone is available to receive the order.",
-                    ms: "Pengambilan sendiri tersedia di kedai kami. Penghantaran tempatan tersedia dalam kawasan Lembah Klang dengan bayaran. Waktu penghantaran: Isnin–Jumaat 10pg–6ptg, Sabtu–Ahad 10pg–3ptg. Sila pastikan ada orang untuk menerima pesanan."
+                    en: "Self-collection is encouraged. Delivery service is available with an additional charge.",
+                    ms: "Pengambilan sendiri digalakkan. Servis penghantaran akan ada caj tambahan."
                 },
                 warranty: {
-                    en: "Warranty valid for 5 days from collection date. If the cake arrives damaged or mouldy within 5 days, we will replace it. After 5 days, mould is considered natural and no replacement will be made. Damage caused by courier mishandling beyond our control is not covered.",
-                    ms: "Waranti sah selama 5 hari dari tarikh pengambilan. Jika kek tiba dalam keadaan rosak atau berjamur dalam tempoh 5 hari, kami akan menggantikannya. Selepas 5 hari, jamur dianggap semula jadi dan tiada penggantian akan dibuat. Kerosakan akibat pengendalian kurier yang tidak terkawal tidak dilindungi."
+                    en: "Warranty valid for 5 days from collection date. If the cake arrives damaged or mouldy within 5 days, Ibu Ayu will replace it. After 5 days, mould is considered natural and no replacement will be made.",
+                    ms: "Waranti sah selama 5 hari dari tarikh pengambilan. Jika kek tiba dalam keadaan rosak atau berjamur dalam tempoh 5 hari, Ibu Ayu akan menggantikannya. Selepas 5 hari, jamur dianggap semula jadi dan tiada penggantian akan dibuat."
                 }
             },
             {
@@ -3698,28 +3758,28 @@
                 description: "700ml, Medium Chocolate Moist", volume: "700ml — Medium",
                 category: "Signature",
                 ingredients: {
-                    en: "Premium cocoa powder, wheat flour, brown sugar, unsalted butter, fresh eggs, full cream milk, baking soda, baking powder, vanilla extract.",
-                    ms: "Serbuk koko premium, tepung gandum, gula perang, mentega tanpa garam, telur segar, susu penuh krim, soda bikarbonat, serbuk penaik, ekstrak vanila."
+                    en: "Corn oil, condensed milk, fine sugar, wheat flour, cocoa powder, eggs, butter, fresh milk, vanilla essence, salt, baking powder, baking soda, whipping cream.",
+                    ms: "Minyak jagung, susu pekat, gula halus, tepung gandum, serbuk koko, telur, butter, susu cair, esen vanilla, garam, baking powder, baking soda, whipping cream."
                 },
                 allergen: {
-                    en: "Contains: Gluten (wheat), Dairy (milk, butter), Eggs. May contain traces of nuts. Suitable for vegetarians.",
-                    ms: "Mengandungi: Gluten (gandum), Tenusu (susu, mentega), Telur. Mungkin mengandungi kesan kacang. Sesuai untuk vegetarian."
+                    en: "Contains: Gluten (wheat flour), Dairy (milk, butter), Eggs.",
+                    ms: "Mengandungi: Gluten (tepung gandum), Tenusu (susu, butter), Telur."
                 },
                 care: {
-                    en: "Keep refrigerated at 0–4°C after collection. Allow to sit at room temperature for 3–5 minutes before serving. Refrigerate for maximum 2 days. Best consumed on the day of purchase.",
-                    ms: "Simpan dalam peti sejuk pada suhu 0–4°C selepas pengambilan. Biarkan pada suhu bilik selama 3–5 minit sebelum dihidangkan. Boleh disimpan dalam peti sejuk maksimum 2 hari. Terbaik dimakan pada hari pembelian."
+                    en: "Refrigerate: lasts approx. 4 days. Room temperature: lasts approx. 2 days.",
+                    ms: "Simpan dalam peti sejuk (Tahan 4+/- hari). Simpan di ruangan luar (Tahan 2+/- hari)."
                 },
                 orderInstr: {
-                    en: "Pre-order required at least 24 hours in advance. Place your order via WhatsApp or our website. Payment must be completed before production begins. Orders are confirmed only upon payment receipt.",
-                    ms: "Pra-tempahan diperlukan sekurang-kurangnya 24 jam lebih awal. Buat tempahan melalui WhatsApp atau laman web kami. Pembayaran mesti diselesaikan sebelum pengeluaran bermula. Tempahan hanya disahkan setelah pembayaran diterima."
+                    en: "Pre-order required at least 24 hours in advance. Order via WhatsApp or this website. Payment must be completed before production begins.",
+                    ms: "Pra-tempahan diperlukan sekurang-kurangnya 24 jam lebih awal. Buat tempahan melalui WhatsApp atau laman web ini. Pembayaran mesti diselesaikan sebelum pengeluaran bermula."
                 },
                 postage: {
-                    en: "Self-collection available at our outlet. Local delivery available within Klang Valley for a fee. Delivery times: Mon–Fri 10am–6pm, Sat–Sun 10am–3pm.",
-                    ms: "Pengambilan sendiri tersedia di kedai kami. Penghantaran tempatan tersedia dalam kawasan Lembah Klang dengan bayaran. Waktu penghantaran: Isnin–Jumaat 10pg–6ptg, Sabtu–Ahad 10pg–3ptg."
+                    en: "Self-collection is encouraged. Delivery service is available with an additional charge.",
+                    ms: "Pengambilan sendiri digalakkan. Servis penghantaran akan ada caj tambahan."
                 },
                 warranty: {
-                    en: "Warranty valid for 5 days from collection date. If the cake arrives damaged or mouldy within 5 days, we will replace it. After 5 days, mould is considered natural and no replacement will be made.",
-                    ms: "Waranti sah selama 5 hari dari tarikh pengambilan. Jika kek tiba dalam keadaan rosak atau berjamur dalam tempoh 5 hari, kami akan menggantikannya. Selepas 5 hari, jamur dianggap semula jadi dan tiada penggantian akan dibuat."
+                    en: "Warranty valid for 5 days from collection date. If the cake arrives damaged or mouldy within 5 days, Ibu Ayu will replace it. After 5 days, mould is considered natural and no replacement will be made.",
+                    ms: "Waranti sah selama 5 hari dari tarikh pengambilan. Jika kek tiba dalam keadaan rosak atau berjamur dalam tempoh 5 hari, Ibu Ayu akan menggantikannya. Selepas 5 hari, jamur dianggap semula jadi dan tiada penggantian akan dibuat."
                 }
             },
             {
@@ -3728,24 +3788,24 @@
                 description: "250ml, Small Chocolate Moist", volume: "250ml — Small",
                 category: "Regular",
                 ingredients: {
-                    en: "Cocoa powder, wheat flour, sugar, butter, eggs, milk, baking powder, vanilla extract.",
-                    ms: "Serbuk koko, tepung gandum, gula, mentega, telur, susu, serbuk penaik, ekstrak vanila."
+                    en: "Corn oil, condensed milk, fine sugar, wheat flour, cocoa powder, eggs, butter, fresh milk, vanilla essence, salt, baking powder, baking soda, whipping cream.",
+                    ms: "Minyak jagung, susu pekat, gula halus, tepung gandum, serbuk koko, telur, butter, susu cair, esen vanilla, garam, baking powder, baking soda, whipping cream."
                 },
                 allergen: {
-                    en: "Contains: Gluten (wheat), Dairy (milk, butter), Eggs. May contain traces of nuts.",
-                    ms: "Mengandungi: Gluten (gandum), Tenusu (susu, mentega), Telur. Mungkin mengandungi kesan kacang."
+                    en: "Contains: Gluten (wheat flour), Dairy (milk, butter), Eggs.",
+                    ms: "Mengandungi: Gluten (tepung gandum), Tenusu (susu, butter), Telur."
                 },
                 care: {
-                    en: "Keep refrigerated at 0–4°C. Best consumed on the day of purchase. Can be refrigerated for up to 2 days.",
-                    ms: "Simpan dalam peti sejuk pada suhu 0–4°C. Terbaik dimakan pada hari pembelian. Boleh disimpan dalam peti sejuk sehingga 2 hari."
+                    en: "Refrigerate: lasts approx. 4 days. Room temperature: lasts approx. 2 days.",
+                    ms: "Simpan dalam peti sejuk (Tahan 4+/- hari). Simpan di ruangan luar (Tahan 2+/- hari)."
                 },
                 orderInstr: {
-                    en: "Pre-order required at least 24 hours in advance. Payment must be completed before production begins.",
-                    ms: "Pra-tempahan diperlukan sekurang-kurangnya 24 jam lebih awal. Pembayaran mesti diselesaikan sebelum pengeluaran bermula."
+                    en: "Pre-order required at least 24 hours in advance. Order via WhatsApp or this website. Payment must be completed before production begins.",
+                    ms: "Pra-tempahan diperlukan sekurang-kurangnya 24 jam lebih awal. Buat tempahan melalui WhatsApp atau laman web ini. Pembayaran mesti diselesaikan sebelum pengeluaran bermula."
                 },
                 postage: {
-                    en: "Self-collection available. Local delivery within Klang Valley for a fee. Mon–Fri 10am–6pm, Sat–Sun 10am–3pm.",
-                    ms: "Pengambilan sendiri tersedia. Penghantaran tempatan dalam kawasan Lembah Klang dengan bayaran. Isnin–Jumaat 10pg–6ptg, Sabtu–Ahad 10pg–3ptg."
+                    en: "Self-collection is encouraged. Delivery service is available with an additional charge.",
+                    ms: "Pengambilan sendiri digalakkan. Servis penghantaran akan ada caj tambahan."
                 },
                 warranty: {
                     en: "Warranty valid for 5 days from collection. Mould within 5 days will be replaced. After 5 days, no replacement.",
@@ -3758,28 +3818,28 @@
                 description: "110ml, Extra Small Chocolate Moist", volume: "110ml — Extra Small",
                 category: "Mini",
                 ingredients: {
-                    en: "Cocoa powder, wheat flour, sugar, butter, eggs, milk, baking powder, vanilla extract.",
-                    ms: "Serbuk koko, tepung gandum, gula, mentega, telur, susu, serbuk penaik, ekstrak vanila."
+                    en: "Corn oil, condensed milk, fine sugar, wheat flour, cocoa powder, eggs, butter, fresh milk, vanilla essence, salt, baking powder, baking soda, whipping cream.",
+                    ms: "Minyak jagung, susu pekat, gula halus, tepung gandum, serbuk koko, telur, butter, susu cair, esen vanilla, garam, baking powder, baking soda, whipping cream."
                 },
                 allergen: {
-                    en: "Contains: Gluten (wheat), Dairy (milk, butter), Eggs.",
-                    ms: "Mengandungi: Gluten (gandum), Tenusu (susu, mentega), Telur."
+                    en: "Contains: Gluten (wheat flour), Dairy (milk, butter), Eggs.",
+                    ms: "Mengandungi: Gluten (tepung gandum), Tenusu (susu, butter), Telur."
                 },
                 care: {
-                    en: "Keep refrigerated at 0–4°C. Best consumed on the day of purchase.",
-                    ms: "Simpan dalam peti sejuk pada suhu 0–4°C. Terbaik dimakan pada hari pembelian."
+                    en: "Refrigerate: lasts approx. 4 days. Room temperature: lasts approx. 2 days.",
+                    ms: "Simpan dalam peti sejuk (Tahan 4+/- hari). Simpan di ruangan luar (Tahan 2+/- hari)."
                 },
                 orderInstr: {
-                    en: "Pre-order required at least 24 hours in advance. Payment must be completed before production begins.",
-                    ms: "Pra-tempahan diperlukan sekurang-kurangnya 24 jam lebih awal. Pembayaran mesti diselesaikan sebelum pengeluaran bermula."
+                    en: "Pre-order required at least 24 hours in advance. Order via WhatsApp or this website. Payment must be completed before production begins.",
+                    ms: "Pra-tempahan diperlukan sekurang-kurangnya 24 jam lebih awal. Buat tempahan melalui WhatsApp atau laman web ini. Pembayaran mesti diselesaikan sebelum pengeluaran bermula."
                 },
                 postage: {
-                    en: "Self-collection available. Local delivery within Klang Valley for a fee.",
-                    ms: "Pengambilan sendiri tersedia. Penghantaran tempatan dalam kawasan Lembah Klang dengan bayaran."
+                    en: "Self-collection is encouraged. Delivery service is available with an additional charge.",
+                    ms: "Pengambilan sendiri digalakkan. Servis penghantaran akan ada caj tambahan."
                 },
                 warranty: {
-                    en: "Warranty valid for 5 days from collection. Mould within 5 days will be replaced.",
-                    ms: "Waranti sah selama 5 hari dari pengambilan. Jamur dalam tempoh 5 hari akan digantikan."
+                    en: "Warranty valid for 5 days from collection. Mould within 5 days will be replaced. After 5 days, no replacement.",
+                    ms: "Waranti sah selama 5 hari dari pengambilan. Jamur dalam tempoh 5 hari akan digantikan. Selepas 5 hari, tiada penggantian."
                 }
             },
             {
@@ -3788,16 +3848,16 @@
                 description: "Tester Size Chocolate Moist", volume: "Tester — Try Before You Buy",
                 category: "Tester",
                 ingredients: {
-                    en: "Cocoa powder, wheat flour, sugar, butter, eggs, milk, baking powder, vanilla extract.",
-                    ms: "Serbuk koko, tepung gandum, gula, mentega, telur, susu, serbuk penaik, ekstrak vanila."
+                    en: "Corn oil, condensed milk, fine sugar, wheat flour, cocoa powder, eggs, butter, fresh milk, vanilla essence, salt, baking powder, baking soda, whipping cream.",
+                    ms: "Minyak jagung, susu pekat, gula halus, tepung gandum, serbuk koko, telur, butter, susu cair, esen vanilla, garam, baking powder, baking soda, whipping cream."
                 },
                 allergen: {
-                    en: "Contains: Gluten (wheat), Dairy (milk, butter), Eggs.",
-                    ms: "Mengandungi: Gluten (gandum), Tenusu (susu, mentega), Telur."
+                    en: "Contains: Gluten (wheat flour), Dairy (milk, butter), Eggs.",
+                    ms: "Mengandungi: Gluten (tepung gandum), Tenusu (susu, butter), Telur."
                 },
                 care: {
-                    en: "Best consumed on the day of purchase. Keep cool and away from direct sunlight.",
-                    ms: "Terbaik dimakan pada hari pembelian. Simpan di tempat sejuk dan jauh dari cahaya matahari langsung."
+                    en: "Refrigerate: lasts approx. 4 days. Room temperature: lasts approx. 2 days.",
+                    ms: "Simpan dalam peti sejuk (Tahan 4+/- hari). Simpan di ruangan luar (Tahan 2+/- hari)."
                 },
                 orderInstr: {
                     en: "Available for same-day pickup. No advance pre-order needed for tester size.",
@@ -3811,8 +3871,7 @@
                     en: "Tester size is non-refundable and non-replaceable as it is intended for sampling purposes only.",
                     ms: "Saiz penyerai tidak boleh dikembalikan dan digantikan kerana ia adalah untuk tujuan sampel sahaja."
                 }
-            }
-        ];
+            }        ];
 
         // ===== THEME =====
         function toggleTheme() {
@@ -3874,31 +3933,31 @@
                 menu_darkmode: 'Dark Mode',
                 menu_lightmode: 'Light Mode',
                 menu_language: 'Language',
-                hero_title: 'Artisanal Chocolate Cakes, Crafted with Passion',
-                hero_desc: 'Indulge in Ibu Ayu\'s premium selection of handcrafted chocolate cakes, made with the finest ingredients and delivered fresh to your door.',
+                hero_title: 'Indulge in Pure Chocolate Perfection',
+                hero_desc: "Ibu Ayu's signature chocolate moist cake is baked fresh and guaranteed to satisfy your sweet cravings.",
                 hero_btn: 'Pre-Order Now',
                 about_title: 'About Ibu Ayu',
                 about_p1: "Welcome to Ibu Ayu Chocolate Moist, where passion meets perfection in every bite. Since 2015, Ibu Ayu has been crafting exceptional chocolate cakes using only the finest ingredients sourced from around the world.",
-                about_p2: 'Ibu Ayu\'s master chocolatiers combine traditional baking techniques with innovative flavors to create cakes that are not just desserts, but unforgettable experiences.',
-                about_p3: 'Ibu Ayu believes in sustainable sourcing and works directly with cocoa farmers to ensure fair trade practices while delivering the most exquisite chocolate to your table.',
+                about_p2: "Ibu Ayu masters traditional baking techniques to create cakes that are not just desserts, but unforgettable experiences.",
+                about_p3: "Ibu Ayu believes in sustainable sourcing and works directly with premium cocoa and quality butter to bring the most exquisite chocolate to your table.",
                 pricing_title: 'Pricing Options',
                 p1_name: 'Tester Size', p1_size: '110ml — Extra Small',
                 p1_f1: 'Perfect for first-timers', p1_f2: 'Classic chocolate moist', p1_f3: 'Try before you buy', p1_f4: 'Pickup available',
                 badge_bestseller: 'Best Seller',
                 p2_name: 'Signature Moist', p2_size: '700ml — Medium Size',
-                p2_f1: 'Serves 4–6 people', p2_f2: 'Rich, moist chocolate layer', p2_f3: 'Ibu Ayu\'s best-selling cake', p2_f4: 'Local delivery available',
+                p2_f1: 'Serves 4–6 people', p2_f2: 'Rich, moist chocolate layer', p2_f3: "Ibu Ayu's best-selling cake", p2_f4: 'Local delivery available',
                 p3_name: 'Special Pre-Order', p3_size: 'Bulk, party & event requests', p3_price: 'Price<br>On Request',
                 p3_f1: 'Bulk & party pre-orders', p3_f2: 'Custom quantity & size', p3_f3: 'Weddings & gatherings', p3_f4: 'Personalised packaging',
                 btn_addcart: 'Add to Cart', btn_viewall: 'View All Cakes', btn_requestorder: 'Request Pre-Order',
-                testi_title: 'What Ibu Ayu\'s Customers Say',
-                testi1: '"Absolutely Great! The Triple Chocolate Delight made our anniversary unforgettable. The layers were perfectly moist and the flavor was incredible."',
-                testi2: '"Best chocolate cake I\'ve ever had! The quality is outstanding and you can taste the premium ingredients. Worth every penny!"',
-                testi3: '"Pre-ordered for my daughter\'s birthday and everyone was amazed. Ibu Ayu has become our go-to for special occasions!"',
+                testi_title: "What Ibu Ayu's Customers Say",
+                testi1: '"Absolutely wonderful! The chocolate moist cake made our anniversary unforgettable. So moist, rich, and full of flavour — we will definitely order again!"',
+                testi2: '"Best chocolate cake I\'ve ever tasted! The quality is outstanding and you can taste the premium ingredients in every bite. Worth every penny!"',
+                testi3: '"Pre-ordered for my daughter\'s birthday and everyone was amazed. Ibu Ayu has become our go-to for every special occasion!"',
                 social_title: 'Follow Ibu Ayu for More',
-                social_desc: 'Stay updated with Ibu Ayu\'s latest creations, special offers, and behind-the-scenes content. Join the sweet community!',
+                social_desc: "Stay updated with Ibu Ayu's latest creations, special offers, and behind-the-scenes content. Join the sweet community!",
                 btn_back: '← Back to Home', btn_backcart: '← Back to Cart',
-                cakes_title: 'Ibu Ayu\'s Complete Cake Collection',
-                cakes_desc: 'Discover Ibu Ayu\'s full range of artisanal chocolate cakes. Each creation is crafted with passion and the finest ingredients.',
+                cakes_title: "Ibu Ayu's Complete Cake Collection",
+                cakes_desc: "Discover Ibu Ayu's full range of fresh-baked chocolate moist cakes. Each creation is crafted with passion and the finest ingredients.",
                 sort_showing: 'Showing', sort_cakes: 'cakes', sort_sortedby: 'Sorted by:',
                 sort_plow: 'Price: Low to High', sort_phigh: 'Price: High to Low', sort_nasc: 'Name: A to Z', sort_ndesc: 'Name: Z to A',
                 cake_quickorder: 'Quick Pre-Order', cake_addcart: 'Add to Cart', cake_seemore: 'See More',
@@ -3915,6 +3974,7 @@
                 form_event_other_label: 'Please describe', form_event_other_ph: 'Describe your event',
                 form_special_label: 'Any special requests or dietary restrictions',
                 btn_addcake: 'Add Another Cake', btn_submit: 'Submit Pre-Order', btn_complete: 'Complete Pre-Order',
+                btn_remove: 'Remove', btn_add_another: 'Add Another Cake',
                 summary_title: 'Pre-Order Summary', summary_type: 'Pre-Order Type', summary_cartorder: 'Cart Pre-Order',
                 summary_delivery: 'Delivery Fee', summary_free: 'Free', summary_tax: 'Tax (8%)', summary_total: 'Total',
                 summary_note: '💡 At least 24 hours notice required.', cart_note: '💡 Your cart items are shown for review.',
@@ -3922,25 +3982,31 @@
                 cart_empty: 'Your cart is empty',
                 cart_checkout: 'Proceed to Checkout',
                 success_title: 'Pre-Order Confirmed!',
-                success_desc: "Thank you for your pre-order! Ibu Ayu will contact you shortly to confirm the details.",
+                success_desc: 'Thank you for your pre-order! Ibu Ayu will contact you shortly to confirm the details.',
                 success_btn: 'Continue Shopping',
                 cart_item_each: 'each',
                 cart_item_remove: 'Remove',
-                footer_tagline: 'Premium Chocolate Moist since 2015',
-                footer_contact: 'Contact', footer_hours: 'Hours',
-                footer_hours1: 'Mon-Fri: 9am-6pm', footer_hours2: 'Sat-Sun: 10am-4pm',
+                footer_tagline: 'Fresh-Baked Chocolate Moist since 2015',
+                footer_contact: 'Contact', footer_hours: 'Business Hours',
+                footer_hours1: 'Mon–Fri: 9am–6pm', footer_hours2: 'Sat–Sun: 10am–4pm',
                 footer_copy: 'Ibu Ayu Chocolate Moist. All rights reserved.',
+                // Contact page
+                contact_tagline: 'Fresh-Baked Chocolate Moist since 2015. Ibu Ayu would love to hear from you!',
+                contact_title: 'Get in Touch',
+                contact_desc: "Have a question about Ibu Ayu's cakes, want to place a bulk order, or just want to say hello? Reach Ibu Ayu through any of the channels below — always happy to help.",
+                // Tab bar
+                tab_home: 'Home', tab_cakes: 'Cakes', tab_contact: 'Contact',
                 // Product Detail
                 btn_back_cakes: 'Back to Cakes',
                 pd_addons: 'Product Add-Ons',
                 pd_addon1_name: 'Birthday Pins',
                 pd_details_title: 'Cake Details',
                 pd_ingredients: 'Ingredients',
-                pd_allergen: 'Allergen',
-                pd_care: 'Cake Care Instruction',
-                pd_remark_title: 'Remark',
-                pd_order_instr: 'Order',
-                pd_postage: 'Postage',
+                pd_allergen: 'Allergen Info',
+                pd_care: 'Cake Care',
+                pd_remark_title: 'Remarks',
+                pd_order_instr: 'How to Order',
+                pd_postage: 'Delivery & Postage',
                 pd_warranty: 'Warranty',
                 addon_selected: 'Selected Add-Ons Total:',
                 addon_addtocart: 'Add to Cart with Add-Ons',
@@ -3954,31 +4020,31 @@
                 menu_darkmode: 'Mod Gelap',
                 menu_lightmode: 'Mod Cerah',
                 menu_language: 'Bahasa',
-                hero_title: 'Kek Coklat Artisan, Dihasilkan dengan Penuh Semangat',
-                hero_desc: 'Nikmati pilihan premium kek coklat buatan tangan Ibu Ayu, dibuat dengan bahan-bahan terbaik dan dihantar segar terus ke pintu anda.',
+                hero_title: 'Nikmati Kesempurnaan Coklat Tulen',
+                hero_desc: 'Kek coklat moist signature Ibu Ayu dibakar segar setiap hari dan dijamin memuaskan selera manis anda.',
                 hero_btn: 'Pra-Tempah Sekarang',
                 about_title: 'Tentang Ibu Ayu',
-                about_p1: 'Selamat datang ke Ibu Ayu Chocolate Moist, di mana semangat bertemu kesempurnaan dalam setiap gigitan. Sejak 2015, Ibu Ayu telah menghasilkan kek coklat istimewa menggunakan bahan-bahan terbaik dari seluruh dunia.',
-                about_p2: 'Pakar coklat Ibu Ayu menggabungkan teknik pembakaran tradisional dengan rasa-rasa inovatif untuk mencipta kek yang bukan sekadar pencuci mulut, tetapi pengalaman yang tidak terlupakan.',
-                about_p3: 'Ibu Ayu mempercayai perolehan yang lestari dan bekerja terus dengan petani koko untuk memastikan amalan perdagangan yang adil sambil menghantar coklat paling istimewa ke meja anda.',
+                about_p1: 'Selamat datang ke Ibu Ayu Chocolate Moist, di mana semangat bertemu kesempurnaan dalam setiap gigitan. Sejak 2015, Ibu Ayu telah menghasilkan kek coklat istimewa menggunakan hanya bahan-bahan terbaik dari seluruh dunia.',
+                about_p2: 'Ibu Ayu menguasai teknik pembakaran tradisional untuk mencipta kek yang bukan sekadar pencuci mulut, tetapi pengalaman yang tidak terlupakan.',
+                about_p3: 'Ibu Ayu mempercayai perolehan bahan yang berkualiti dan bekerja terus dengan koko premium serta butter terbaik untuk menghadirkan coklat paling istimewa ke meja anda.',
                 pricing_title: 'Pilihan Harga',
                 p1_name: 'Saiz Penyerai', p1_size: '110ml — Sangat Kecil',
-                p1_f1: 'Sesuai untuk kali pertama', p1_f2: 'Kek coklat klasik', p1_f3: 'Cuba sebelum beli', p1_f4: 'Boleh ambil sendiri',
+                p1_f1: 'Sesuai untuk kali pertama', p1_f2: 'Kek coklat moist klasik', p1_f3: 'Cuba sebelum beli', p1_f4: 'Boleh ambil sendiri',
                 badge_bestseller: 'Terlaris',
                 p2_name: 'Kek Signature', p2_size: '700ml — Saiz Sederhana',
-                p2_f1: 'Mencukupi 4–6 orang', p2_f2: 'Lapisan coklat yang lembap', p2_f3: 'Kek paling laris Ibu Ayu', p2_f4: 'Penghantaran tempatan tersedia',
+                p2_f1: 'Mencukupi 4–6 orang', p2_f2: 'Lapisan coklat yang kaya dan lembap', p2_f3: 'Kek paling laris Ibu Ayu', p2_f4: 'Penghantaran tempatan tersedia',
                 p3_name: 'Pra-Tempahan Khas', p3_size: 'Tempahan borong, majlis & acara', p3_price: 'Harga<br>Atas Permintaan',
                 p3_f1: 'Pra-tempahan borong & majlis', p3_f2: 'Kuantiti & saiz tersuai', p3_f3: 'Perkahwinan & perhimpunan', p3_f4: 'Pembungkusan peribadi',
                 btn_addcart: 'Tambah ke Troli', btn_viewall: 'Lihat Semua Kek', btn_requestorder: 'Hantar Pra-Tempahan',
                 testi_title: 'Apa Kata Pelanggan Ibu Ayu',
-                testi1: '"Sangat Hebat! Kek Triple Chocolate Delight menjadikan ulangtahun kami tidak terlupakan. Lapisan kek sungguh lembap dan rasanya luar biasa."',
-                testi2: '"Kek coklat terbaik yang pernah saya makan! Kualiti sangat tinggi dan anda boleh rasa bahan-bahan premium. Berbaloi setiap sen!"',
-                testi3: '"Pra-tempahan untuk hari jadi anak saya dan semua orang kagum. Ibu Ayu sudah jadi pilihan utama kami untuk majlis istimewa!"',
+                testi1: '"Sangat menakjubkan! Kek coklat moist ini menjadikan ulangtahun kami tidak terlupakan. Sungguh lembap, kaya rasa, dan lazat — kami pasti akan menempah lagi!"',
+                testi2: '"Kek coklat terbaik yang pernah saya rasa! Kualiti sangat tinggi dan bahan-bahan premium terasa dalam setiap gigitan. Berbaloi setiap sen!"',
+                testi3: '"Pra-tempahan untuk hari jadi anak saya dan semua orang kagum. Ibu Ayu sudah jadi pilihan utama kami untuk setiap majlis istimewa!"',
                 social_title: 'Ikuti Ibu Ayu untuk Lebih Banyak',
                 social_desc: 'Dapatkan maklumat terkini tentang ciptaan terbaru Ibu Ayu, tawaran istimewa, dan kandungan di sebalik tabir. Sertai komuniti manis kami!',
                 btn_back: '← Kembali ke Utama', btn_backcart: '← Kembali ke Troli',
                 cakes_title: 'Koleksi Kek Lengkap Ibu Ayu',
-                cakes_desc: 'Temui pelbagai kek coklat artisan Ibu Ayu. Setiap ciptaan dibuat dengan penuh semangat dan bahan-bahan terbaik.',
+                cakes_desc: 'Temui pelbagai kek coklat moist segar Ibu Ayu. Setiap ciptaan dihasilkan dengan penuh semangat dan bahan-bahan terbaik.',
                 sort_showing: 'Menunjukkan', sort_cakes: 'kek', sort_sortedby: 'Diisih mengikut:',
                 sort_plow: 'Harga: Rendah ke Tinggi', sort_phigh: 'Harga: Tinggi ke Rendah', sort_nasc: 'Nama: A ke Z', sort_ndesc: 'Nama: Z ke A',
                 cake_quickorder: 'Pra-Tempah Cepat', cake_addcart: 'Tambah ke Troli', cake_seemore: 'Lihat Lagi',
@@ -3993,8 +4059,9 @@
                 form_event_family: 'Hari Keluarga', form_event_birthday: 'Parti Hari Jadi',
                 form_event_wedding: 'Cenderahati Perkahwinan', form_event_other: 'Lain-lain',
                 form_event_other_label: 'Sila huraikan', form_event_other_ph: 'Huraikan acara anda',
-                form_special_label: 'Sebarang permintaan khas',
+                form_special_label: 'Sebarang permintaan khas atau pantang larang pemakanan',
                 btn_addcake: 'Tambah Kek Lain', btn_submit: 'Hantar Pra-Tempahan', btn_complete: 'Selesaikan Pra-Tempahan',
+                btn_remove: 'Buang', btn_add_another: 'Tambah Kek Lain',
                 summary_title: 'Ringkasan Pra-Tempahan', summary_type: 'Jenis Pra-Tempahan', summary_cartorder: 'Pra-Tempahan Troli',
                 summary_delivery: 'Bayaran Penghantaran', summary_free: 'Percuma', summary_tax: 'Cukai (8%)', summary_total: 'Jumlah',
                 summary_note: '💡 Sekurang-kurangnya 24 jam notis diperlukan.', cart_note: '💡 Item troli anda ditunjukkan untuk semakan.',
@@ -4006,21 +4073,27 @@
                 success_btn: 'Teruskan Membeli-belah',
                 cart_item_each: 'setiap satu',
                 cart_item_remove: 'Buang',
-                footer_tagline: 'Kek Coklat Premium sejak 2015',
+                footer_tagline: 'Kek Coklat Moist Segar sejak 2015',
                 footer_contact: 'Hubungi', footer_hours: 'Waktu Operasi',
-                footer_hours1: 'Isnin-Jumaat: 9pg-6ptg', footer_hours2: 'Sabtu-Ahad: 10pg-4ptg',
+                footer_hours1: 'Isnin–Jumaat: 9pg–6ptg', footer_hours2: 'Sabtu–Ahad: 10pg–4ptg',
                 footer_copy: 'Ibu Ayu Chocolate Moist. Hak cipta terpelihara.',
+                // Contact page
+                contact_tagline: 'Kek Coklat Moist Segar sejak 2015. Ibu Ayu sedia membantu anda!',
+                contact_title: 'Hubungi Kami',
+                contact_desc: 'Ada soalan tentang kek Ibu Ayu, ingin buat tempahan borong, atau sekadar mahu bertanya? Hubungi Ibu Ayu melalui mana-mana saluran di bawah — sentiasa sedia membantu.',
+                // Tab bar
+                tab_home: 'Utama', tab_cakes: 'Kek', tab_contact: 'Hubungi',
                 // Product Detail
                 btn_back_cakes: 'Kembali ke Kek',
                 pd_addons: 'Tambahan Produk',
                 pd_addon1_name: 'Pin Hari Jadi',
                 pd_details_title: 'Butiran Kek',
                 pd_ingredients: 'Bahan-bahan',
-                pd_allergen: 'Alergen',
-                pd_care: 'Arahan Penjagaan Kek',
+                pd_allergen: 'Maklumat Alergen',
+                pd_care: 'Penjagaan Kek',
                 pd_remark_title: 'Catatan',
-                pd_order_instr: 'Pesanan',
-                pd_postage: 'Penghantaran',
+                pd_order_instr: 'Cara Tempah',
+                pd_postage: 'Penghantaran & Pos',
                 pd_warranty: 'Waranti',
                 addon_selected: 'Jumlah Tambahan Dipilih:',
                 addon_addtocart: 'Tambah ke Troli dengan Tambahan',
@@ -4258,7 +4331,7 @@
                 ).join('');
                 return `
                 <div class="form-addon-row ${isSelected ? 'selected' : ''}" id="form-addon-${containerId}-${addon.id}">
-                    <img src="${addon.image}" alt="${name}" class="form-addon-img">
+                    ${makeImgWrap(addon.image, name, 'form-addon-img-wrap', 'width:54px;height:54px;border-radius:8px;flex-shrink:0;')}
                     <div class="form-addon-info">
                         <span class="form-addon-name">${name}</span>
                         <span class="form-addon-price">+ RM${addon.price.toFixed(2)} each</span>
@@ -4441,14 +4514,14 @@
                             </div>
                         </div>`}
                         <button type="button" class="remove-cake-btn" style="width:100%;margin-top:10px;" onclick="cgCheckoutRemove(${gi})">
-                            <i class="fas fa-trash"></i> Remove
+                            <i class="fas fa-trash"></i> ${translations[currentLang].btn_remove || 'Remove'}
                         </button>
                     </div>`;
                 });
             }
 
             displayHTML += `<button type="button" class="add-another-cake-btn" onclick="cartCheckoutAddCake()">
-                <i class="fas fa-plus"></i> Add Another Cake
+                <i class="fas fa-plus"></i> ${translations[currentLang].btn_add_another || 'Add Another Cake'}
             </button>`;
 
             itemsDisplay.innerHTML = displayHTML;
@@ -4952,7 +5025,7 @@
                 return `
                 <div class="addon-popup-item ${sel.qty > 0 ? 'selected' : ''}" id="addon-item-${addon.id}">
                     <div class="addon-popup-item-top">
-                        <img src="${addon.image}" alt="${name}" class="addon-popup-item-img">
+                        <div class="addon-popup-item-img-wrap">${makeImgWrap(addon.image, name, '', 'width:56px;height:56px;border-radius:8px;flex-shrink:0;')}</div>
                         <div class="addon-popup-item-info">
                             <span class="addon-popup-item-name">${name}</span>
                             <span class="addon-popup-item-price">+ RM${addon.price.toFixed(2)} each</span>
@@ -5068,7 +5141,7 @@
             const imgs = cake.images || [cake.image];
             wrapper.style.transform = 'translateX(0)';
             wrapper.innerHTML = imgs.map(src =>
-                `<div class="pd-slide"><img src="${src}" alt="${cake.name}" onerror="this.style.background='#5c3d2e'"></div>`
+                `<div class="pd-slide">${makeImgWrap(src, cake.name)}</div>`
             ).join('');
             dots.innerHTML = imgs.map((_, i) =>
                 `<div class="pd-dot ${i===0?'active':''}" onclick="event.stopPropagation();pdGoTo(${i})"></div>`
@@ -5232,7 +5305,7 @@
             grid.innerHTML = sorted.map(cake => `
                 <div class="cake-card" onclick="openProductDetail(${cake.id})" style="cursor:pointer;">
                     <div class="cake-image">
-                        <img src="${cake.image}" alt="${cake.name}" onerror="this.style.background='#5c3d2e';this.style.height='100%'">
+                        ${makeImgWrap(cake.image, cake.name, '', 'height:100%;')}
                     </div>
                     <div class="cake-info">
                         <h3 class="cake-name">${cake.name}</h3>
@@ -5348,6 +5421,16 @@
             n.style.cssText = 'position:fixed;top:100px;right:20px;background:var(--primary-gold);color:var(--primary-dark);padding:15px 25px;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,0.2);z-index:9999;font-weight:500;';
             document.body.appendChild(n);
             setTimeout(() => n.remove(), 3000);
+
+        // ===== IMAGE LOADING SHIMMER HELPER =====
+        function makeImgWrap(src, alt, extraClass = '', extraStyle = '') {
+            const cls = ['img-wrap', extraClass].filter(Boolean).join(' ');
+            return `<div class="${cls}" style="${extraStyle}">
+                <img src="${src}" alt="${alt}"
+                     onload="this.parentElement.classList.add('loaded')"
+                     onerror="this.parentElement.classList.add('loaded');this.style.opacity='1'">
+            </div>`;
+        }
 
         function validateEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
 
