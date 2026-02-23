@@ -658,17 +658,55 @@
 
         .cake-add-to-cart:hover { background: var(--secondary-gold); }
 
+        .cake-seemore-btn {
+            background: var(--primary-dark);
+            color: white;
+            border: none;
+            padding: 9px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            font-size: 0.85rem;
+            flex: 1;
+            letter-spacing: 0.02em;
+        }
+        .cake-seemore-btn:hover { background: var(--primary-gold); color: var(--primary-dark); }
+
+        /* Display mode button: hidden on desktop, shown only on mobile */
+        .display-mode-btn { display: none !important; }
+
         /* ===== PRODUCT DETAIL PAGE ===== */
         #productDetail { padding-top: 100px; padding-bottom: 60px; }
         .pd-container {
-            max-width: 860px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 0 5%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+        /* Back button spans both columns */
+        .pd-back-btn {
+            grid-column: 1 / -1;
+            margin-bottom: 4px;
+            align-self: flex-start;
+        }
+        /* Card 1 spans full left column height */
+        .pd-card-main {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        /* Right column: cards 2 & 3 stacked */
+        .pd-right-col {
+            grid-column: 2;
+            grid-row: 2;
             display: flex;
             flex-direction: column;
             gap: 24px;
         }
-        .pd-back-btn { margin-bottom: 4px; align-self: flex-start; }
 
         /* Cards */
         .pd-card {
@@ -815,6 +853,31 @@
             margin-bottom: 22px;
         }
         .pd-addcart-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+        /* Side-by-side action row */
+        .pd-action-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+        .pd-addcart-main {
+            flex: 1;
+            width: auto;
+            margin-bottom: 0;
+        }
+        .pd-quickorder-btn {
+            flex: 1;
+            background: var(--primary-dark);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.18s, transform 0.18s;
+        }
+        .pd-quickorder-btn:hover { background: var(--dark-brown); transform: translateY(-1px); }
 
         /* Add-Ons */
         .pd-addons-section { border-top: 1px solid var(--border-light); padding-top: 18px; }
@@ -1011,6 +1074,52 @@
             border-top: 1px solid var(--border-light);
             flex-shrink: 0;
         }
+
+        /* ===== FORM ADD-ON ROWS (custom order & cart checkout) ===== */
+        .form-addon-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border-light);
+            background: var(--background-white);
+            margin-bottom: 10px;
+            transition: border-color 0.2s;
+        }
+        .form-addon-row.selected { border-color: var(--primary-gold); background: rgba(212,165,116,0.06); }
+        .form-addon-img {
+            width: 54px;
+            height: 54px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .form-addon-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .form-addon-name {
+            display: block;
+            font-weight: 700;
+            font-size: 0.92rem;
+            color: var(--primary-dark);
+            margin-bottom: 2px;
+        }
+        body.dark-mode .form-addon-name { color: white; }
+        .form-addon-price {
+            display: block;
+            font-size: 0.82rem;
+            color: var(--primary-gold);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .form-addon-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
         .addon-popup-total {
             display: flex;
             justify-content: space-between;
@@ -1046,7 +1155,15 @@
         /* Mobile overrides */
         @media (max-width: 768px) {
             #productDetail { padding-top: 74px; padding-bottom: 30px; }
-            .pd-container { padding: 0 4%; gap: 16px; }
+            .pd-container {
+                padding: 0 4%;
+                gap: 16px;
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+            .pd-back-btn { grid-column: 1; }
+            .pd-card-main { grid-column: 1; grid-row: auto; }
+            .pd-right-col { grid-column: 1; grid-row: auto; gap: 16px; }
             .pd-carousel { height: 240px; }
             .pd-info { padding: 16px 16px 20px; }
             .pd-name { font-size: 1.3rem; }
@@ -1098,7 +1215,15 @@
         /* Mobile overrides */
         @media (max-width: 768px) {
             #productDetail { padding-top: 74px; padding-bottom: 80px; }
-            .pd-container { padding: 0 4%; gap: 16px; }
+            .pd-container {
+                padding: 0 4%;
+                gap: 16px;
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+            .pd-back-btn { grid-column: 1; }
+            .pd-card-main { grid-column: 1; grid-row: auto; }
+            .pd-right-col { grid-column: 1; grid-row: auto; gap: 16px; }
             .pd-carousel { height: 240px; }
             .pd-info { padding: 16px 16px 20px; }
             .pd-name { font-size: 1.3rem; }
@@ -1326,7 +1451,52 @@
             max-height: calc(100vh - 140px);
             overflow-y: auto;
             transition: all 0.3s ease;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
         }
+        .order-summary-sidebar::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+        /* Cart checkout grouped items */
+        .checkout-group-card {
+            background: var(--background-light);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-light);
+        }
+        .checkout-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .checkout-group-label {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--primary-dark);
+        }
+        body.dark-mode .checkout-group-label { color: white; }
+        .checkout-group-sub {
+            font-weight: 700;
+            color: var(--primary-gold);
+            font-size: 0.9rem;
+        }
+        .checkout-group-qty-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 0.88rem;
+            color: var(--text-medium);
+        }
+        .checkout-addon-line {
+            font-size: 0.82rem;
+            color: var(--text-medium);
+            padding: 3px 0 3px 8px;
+            border-left: 2px solid var(--primary-gold);
+            margin: 4px 0;
+        }
+        .order-summary-addon { opacity: 0.8; font-size: 0.85rem; }
 
         .order-summary {
             background: var(--background-white);
@@ -1982,7 +2152,7 @@
             .display-mode-btn:active { background: var(--primary-gold); color: var(--primary-dark); }
 
             /* Desktop: hide display mode button */
-            .display-mode-btn { display: none; }
+            /* (shown on mobile via the @media max-width:768px rule below) */
 
             /* Unified wrapper: sorting card + cakes grid inside one rounded rect */
             .cakes-page-inner .sorting-controls {
@@ -2113,6 +2283,24 @@
             /* --- Cart items --- */
             .cart-item { flex-direction: column; align-items: flex-start; gap: 15px; }
             .cart-item-controls-wrapper { width: 100%; justify-content: space-between; }
+
+            /* Fix cart group rows on mobile: stack name above controls */
+            .cart-group-row {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            .cart-group-row-info {
+                width: 100%;
+                min-width: 0;
+            }
+            .cart-group-row-name {
+                white-space: normal;
+                overflow: visible;
+                text-overflow: unset;
+                font-size: 0.88rem;
+            }
+            .cart-group-row-price { font-size: 0.78rem; }
+            .cart-item-controls-wrapper { width: 100%; }
 
             /* --- Order form --- */
             .order-form { padding: 20px; }
@@ -2455,7 +2643,7 @@
             .mob-overlay { display: flex; flex-direction: column; justify-content: space-between; }
             .mob-view-all-card { display: flex !important; }
             .mob-pricing-wrapper { display: flex; }
-            .display-mode-btn { display: flex; }
+            .display-mode-btn { display: flex !important; }
 
             /* Show testimonial image panels on mobile */
             .testimonial-card .testi-img-panel { display: block; }
@@ -2838,7 +3026,7 @@
                             <img src="FP.png" alt="View All Cakes">
                         </div>
                         <div class="mob-overlay">
-                            <span class="mob-title">Our Cakes</span>
+                            <span class="mob-title">Ibu Ayu Cakes</span>
                             <span class="mob-action" data-i18n="btn_viewall">View All Cakes</span>
                         </div>
                         <div class="pricing-info"></div>
@@ -2882,7 +3070,7 @@
                         <div class="pricing-card mob-card-viewall" onclick="showCakesPage()">
                             <div class="pricing-image"><img src="FP.png" alt="View All Cakes"></div>
                             <div class="mob-overlay">
-                                <span class="mob-title">Our Cakes</span>
+                                <span class="mob-title">Ibu Ayu Cakes</span>
                                 <span class="mob-action" data-i18n="btn_viewall">View All Cakes</span>
                             </div>
                         </div>
@@ -3009,7 +3197,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label data-i18n="form_phone">Phone <span class="required">*</span></label>
-                                    <input type="tel" id="customerPhone" placeholder="(555) 123-4567" required>
+                                    <input type="tel" id="customerPhone" placeholder="+60 12-345 6789" required>
                                 </div>
                             </div>
                         </div>
@@ -3021,8 +3209,26 @@
                                 <textarea id="deliveryAddress" placeholder="Street address, city, state, ZIP code" data-i18n-placeholder="form_address_ph" required></textarea>
                             </div>
                             <div class="form-group">
-                                <label data-i18n="form_date">Delivery Date <span class="required">*</span></label>
+                                <label data-i18n="form_date_expected">Expected Delivery Date <span class="required">*</span></label>
                                 <input type="date" id="deliveryDate" required>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-section-title" data-i18n="form_event">Event Type</div>
+                            <div class="form-group">
+                                <label data-i18n="form_event_label">What is this order for? <span class="required">*</span></label>
+                                <select id="eventType" onchange="toggleEventOther(this)" required>
+                                    <option value="" disabled selected data-i18n="form_event_pick">— Select event type —</option>
+                                    <option value="family-day" data-i18n="form_event_family">Family Day</option>
+                                    <option value="birthday" data-i18n="form_event_birthday">Birthday Party</option>
+                                    <option value="wedding" data-i18n="form_event_wedding">Wedding Doorgift</option>
+                                    <option value="other" data-i18n="form_event_other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="eventOtherGroup" style="display:none;">
+                                <label data-i18n="form_event_other_label">Please describe <span class="required">*</span></label>
+                                <input type="text" id="eventOtherDesc" placeholder="Describe your event" data-i18n-placeholder="form_event_other_ph">
                             </div>
                         </div>
 
@@ -3032,6 +3238,11 @@
                             <button type="button" class="add-another-cake-btn" onclick="addCakeSelection()">
                                 <i class="fas fa-plus"></i> <span data-i18n="btn_addcake">Add Another Cake</span>
                             </button>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-section-title" data-i18n="form_addons">Add-Ons</div>
+                            <div id="customOrderAddonsDisplay"></div>
                         </div>
 
                         <div class="form-section">
@@ -3053,6 +3264,7 @@
                                 <div class="summary-package-name" id="packageType">-</div>
                             </div>
                             <div id="orderItemsSummary"></div>
+                            <div id="orderAddonsSummary"></div>
                             <div class="order-summary-item"><span data-i18n="summary_delivery">Delivery Fee</span><span data-i18n="summary_free">Free</span></div>
                             <div class="order-summary-item"><span data-i18n="summary_tax">Tax (8%)</span><span id="taxAmount">RM0.00</span></div>
                             <div class="order-summary-total">
@@ -3090,7 +3302,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label data-i18n="form_phone">Phone <span class="required">*</span></label>
-                                    <input type="tel" id="cartCustomerPhone" placeholder="(555) 123-4567" required>
+                                    <input type="tel" id="cartCustomerPhone" placeholder="+60 12-345 6789" required>
                                 </div>
                             </div>
                         </div>
@@ -3102,7 +3314,7 @@
                                 <textarea id="cartDeliveryAddress" placeholder="Street address, city, state, ZIP code" required></textarea>
                             </div>
                             <div class="form-group">
-                                <label data-i18n="form_date">Delivery Date <span class="required">*</span></label>
+                                <label data-i18n="form_date_preorder">Pre-Order Date <span class="required">*</span></label>
                                 <input type="date" id="cartDeliveryDate" required>
                             </div>
                         </div>
@@ -3110,6 +3322,11 @@
                         <div class="form-section">
                             <div class="form-section-title" data-i18n="form_orderitems">Your Order Items</div>
                             <div id="cartOrderItemsDisplay"></div>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-section-title" data-i18n="form_addons">Add-Ons</div>
+                            <div id="cartOrderAddonsDisplay"></div>
                         </div>
 
                         <div class="form-section">
@@ -3131,6 +3348,7 @@
                                 <div class="summary-package-name" data-i18n="summary_cartorder">Cart Order</div>
                             </div>
                             <div id="cartOrderItemsSummary"></div>
+                            <div id="cartAddonsSummary"></div>
                             <div class="order-summary-item"><span data-i18n="summary_delivery">Delivery Fee</span><span data-i18n="summary_free">Free</span></div>
                             <div class="order-summary-item"><span data-i18n="summary_tax">Tax (8%)</span><span id="cartTaxAmount">RM0.00</span></div>
                             <div class="order-summary-total">
@@ -3170,7 +3388,10 @@
                                 <button class="pd-qty-btn" onclick="pdQtyChange(1)">+</button>
                             </div>
                         </div>
-                        <button class="pd-addcart-btn" onclick="pdAddToCart()" data-i18n="btn_addcart">Add to Cart</button>
+                        <div class="pd-action-row">
+                            <button class="pd-addcart-btn pd-addcart-main" onclick="pdAddToCart()" data-i18n="btn_addcart">Add to Cart</button>
+                            <button class="pd-quickorder-btn" onclick="pdQuickOrder()" data-i18n="cake_quickorder">Quick Pre-Order</button>
+                        </div>
 
                         <!-- Add-Ons -->
                         <div class="pd-addons-section">
@@ -3187,6 +3408,9 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- CARD 2 + 3: Right column wrapper -->
+                <div class="pd-right-col">
 
                 <!-- CARD 2: Cake Details -->
                 <div class="pd-card pd-card-details">
@@ -3240,6 +3464,8 @@
                     </div>
                 </div>
 
+                </div><!-- end .pd-right-col -->
+
             </div>
         </section>
 
@@ -3277,13 +3503,13 @@
                     <img src="LOGO.png" alt="Ibu Ayu Logo" class="contact-logo-img">
                 </div>
                 <div class="contact-brand-name">IBU AYU</div>
-                <p class="contact-tagline">Premium Chocolate Moist, crafted with love since 2015. We'd love to hear from you!</p>
+                <p class="contact-tagline">Premium Chocolate Moist, crafted with love since 2015. Ibu Ayu would love to hear from you!</p>
             </div>
 
             <!-- Info strip + buttons -->
             <div class="contact-info-strip">
                 <h2>Get in Touch</h2>
-                <p>Have a question about our cakes, want to place a bulk order, or just want to say hello? Reach us through any of the channels below — we're always happy to help.</p>
+                <p>Have a question about Ibu Ayu's cakes, want to place a bulk order, or just want to say hello? Reach Ibu Ayu through any of the channels below — always happy to help.</p>
             </div>
 
             <div class="contact-buttons-row">
@@ -3412,7 +3638,7 @@
                 <div style="font-size: 4rem; margin-bottom: 20px;">🎂</div>
                 <h2 style="color: var(--primary-gold); margin-bottom: 15px;" data-i18n="success_title">Pre-Order Confirmed!</h2>
                 <p style="color: var(--text-medium); margin-bottom: 30px;" data-i18n="success_desc">
-                    Thank you for your pre-order! We'll contact you shortly to confirm the details.
+                    Thank you for your pre-order! Ibu Ayu will contact you shortly to confirm the details.
                 </p>
                 <button class="btn btn-primary" onclick="closeSuccessModal()" data-i18n="success_btn">Continue Shopping</button>
             </div>
@@ -3641,7 +3867,7 @@
         // ===== LANGUAGE =====
         const translations = {
             en: {
-                nav_about: 'About Us',
+                nav_about: 'Ibu Ayu',
                 nav_cakes: 'Cakes',
                 nav_pricing: 'Pricing',
                 nav_testimonials: 'Testimonials',
@@ -3649,38 +3875,44 @@
                 menu_lightmode: 'Light Mode',
                 menu_language: 'Language',
                 hero_title: 'Artisanal Chocolate Cakes, Crafted with Passion',
-                hero_desc: 'Indulge in our premium selection of handcrafted chocolate cakes, made with the finest ingredients and delivered fresh to your door.',
+                hero_desc: 'Indulge in Ibu Ayu\'s premium selection of handcrafted chocolate cakes, made with the finest ingredients and delivered fresh to your door.',
                 hero_btn: 'Pre-Order Now',
-                about_title: 'About Us',
-                about_p1: "Welcome to Ibu Ayu Chocolate Moist, where passion meets perfection in every bite. Since 2015, we've been crafting exceptional chocolate cakes using only the finest ingredients sourced from around the world.",
-                about_p2: 'Our master chocolatiers combine traditional baking techniques with innovative flavors to create cakes that are not just desserts, but unforgettable experiences.',
-                about_p3: 'We believe in sustainable sourcing and work directly with cocoa farmers to ensure fair trade practices while delivering the most exquisite chocolate to your table.',
+                about_title: 'About Ibu Ayu',
+                about_p1: "Welcome to Ibu Ayu Chocolate Moist, where passion meets perfection in every bite. Since 2015, Ibu Ayu has been crafting exceptional chocolate cakes using only the finest ingredients sourced from around the world.",
+                about_p2: 'Ibu Ayu\'s master chocolatiers combine traditional baking techniques with innovative flavors to create cakes that are not just desserts, but unforgettable experiences.',
+                about_p3: 'Ibu Ayu believes in sustainable sourcing and works directly with cocoa farmers to ensure fair trade practices while delivering the most exquisite chocolate to your table.',
                 pricing_title: 'Pricing Options',
                 p1_name: 'Tester Size', p1_size: '110ml — Extra Small',
                 p1_f1: 'Perfect for first-timers', p1_f2: 'Classic chocolate moist', p1_f3: 'Try before you buy', p1_f4: 'Pickup available',
                 badge_bestseller: 'Best Seller',
                 p2_name: 'Signature Moist', p2_size: '700ml — Medium Size',
-                p2_f1: 'Serves 4–6 people', p2_f2: 'Rich, moist chocolate layer', p2_f3: 'Our best-selling cake', p2_f4: 'Local delivery available',
+                p2_f1: 'Serves 4–6 people', p2_f2: 'Rich, moist chocolate layer', p2_f3: 'Ibu Ayu\'s best-selling cake', p2_f4: 'Local delivery available',
                 p3_name: 'Special Pre-Order', p3_size: 'Bulk, party & event requests', p3_price: 'Price<br>On Request',
                 p3_f1: 'Bulk & party pre-orders', p3_f2: 'Custom quantity & size', p3_f3: 'Weddings & gatherings', p3_f4: 'Personalised packaging',
                 btn_addcart: 'Add to Cart', btn_viewall: 'View All Cakes', btn_requestorder: 'Request Pre-Order',
-                testi_title: 'What Our Customers Say',
+                testi_title: 'What Ibu Ayu\'s Customers Say',
                 testi1: '"Absolutely Great! The Triple Chocolate Delight made our anniversary unforgettable. The layers were perfectly moist and the flavor was incredible."',
                 testi2: '"Best chocolate cake I\'ve ever had! The quality is outstanding and you can taste the premium ingredients. Worth every penny!"',
                 testi3: '"Pre-ordered for my daughter\'s birthday and everyone was amazed. Ibu Ayu has become our go-to for special occasions!"',
-                social_title: 'Follow Us for More',
-                social_desc: 'Stay updated with our latest creations, special offers, and behind-the-scenes content. Join our sweet community!',
+                social_title: 'Follow Ibu Ayu for More',
+                social_desc: 'Stay updated with Ibu Ayu\'s latest creations, special offers, and behind-the-scenes content. Join the sweet community!',
                 btn_back: '← Back to Home', btn_backcart: '← Back to Cart',
-                cakes_title: 'Our Complete Cake Collection',
-                cakes_desc: 'Discover our full range of artisanal chocolate cakes. Each creation is crafted with passion and the finest ingredients.',
+                cakes_title: 'Ibu Ayu\'s Complete Cake Collection',
+                cakes_desc: 'Discover Ibu Ayu\'s full range of artisanal chocolate cakes. Each creation is crafted with passion and the finest ingredients.',
                 sort_showing: 'Showing', sort_cakes: 'cakes', sort_sortedby: 'Sorted by:',
                 sort_plow: 'Price: Low to High', sort_phigh: 'Price: High to Low', sort_nasc: 'Name: A to Z', sort_ndesc: 'Name: Z to A',
-                cake_quickorder: 'Quick Pre-Order', cake_addcart: 'Add to Cart',
+                cake_quickorder: 'Quick Pre-Order', cake_addcart: 'Add to Cart', cake_seemore: 'See More',
                 order_title: 'Create Your Custom Pre-Order', order_desc: 'Fill in the details below to place your special chocolate cake pre-order',
                 cart_title: 'Complete Your Cart Pre-Order', cart_desc: 'Please provide your details to complete your cart pre-order',
                 form_personal: 'Personal Information', form_delivery: 'Delivery Details', form_cakes: 'Cake Selections',
-                form_special: 'Special Instructions', form_orderitems: 'Your Pre-Order Items',
+                form_special: 'Special Instructions', form_orderitems: 'Your Pre-Order Items', form_addons: 'Add-Ons',
                 form_name: 'Full Name', form_email: 'Email', form_phone: 'Phone', form_address: 'Address', form_date: 'Delivery Date',
+                form_date_expected: 'Expected Delivery Date', form_date_preorder: 'Pre-Order Date',
+                form_event: 'Event Type', form_event_label: 'What is this order for?',
+                form_event_pick: '— Select event type —',
+                form_event_family: 'Family Day', form_event_birthday: 'Birthday Party',
+                form_event_wedding: 'Wedding Doorgift', form_event_other: 'Other',
+                form_event_other_label: 'Please describe', form_event_other_ph: 'Describe your event',
                 form_special_label: 'Any special requests or dietary restrictions',
                 btn_addcake: 'Add Another Cake', btn_submit: 'Submit Pre-Order', btn_complete: 'Complete Pre-Order',
                 summary_title: 'Pre-Order Summary', summary_type: 'Pre-Order Type', summary_cartorder: 'Cart Pre-Order',
@@ -3690,7 +3922,7 @@
                 cart_empty: 'Your cart is empty',
                 cart_checkout: 'Proceed to Checkout',
                 success_title: 'Pre-Order Confirmed!',
-                success_desc: "Thank you for your pre-order! We'll contact you shortly to confirm the details.",
+                success_desc: "Thank you for your pre-order! Ibu Ayu will contact you shortly to confirm the details.",
                 success_btn: 'Continue Shopping',
                 cart_item_each: 'each',
                 cart_item_remove: 'Remove',
@@ -3715,7 +3947,7 @@
                 addon_variants_label: 'Choose variant:',
             },
             ms: {
-                nav_about: 'Tentang Kami',
+                nav_about: 'Ibu Ayu',
                 nav_cakes: 'Kek',
                 nav_pricing: 'Harga',
                 nav_testimonials: 'Testimoni',
@@ -3723,38 +3955,44 @@
                 menu_lightmode: 'Mod Cerah',
                 menu_language: 'Bahasa',
                 hero_title: 'Kek Coklat Artisan, Dihasilkan dengan Penuh Semangat',
-                hero_desc: 'Nikmati pilihan premium kek coklat buatan tangan kami, dibuat dengan bahan-bahan terbaik dan dihantar segar terus ke pintu anda.',
+                hero_desc: 'Nikmati pilihan premium kek coklat buatan tangan Ibu Ayu, dibuat dengan bahan-bahan terbaik dan dihantar segar terus ke pintu anda.',
                 hero_btn: 'Pra-Tempah Sekarang',
-                about_title: 'Tentang Kami',
-                about_p1: 'Selamat datang ke Ibu Ayu Chocolate Moist, di mana semangat bertemu kesempurnaan dalam setiap gigitan. Sejak 2015, kami telah menghasilkan kek coklat istimewa menggunakan bahan-bahan terbaik dari seluruh dunia.',
-                about_p2: 'Pakar coklat kami menggabungkan teknik pembakaran tradisional dengan rasa-rasa inovatif untuk mencipta kek yang bukan sekadar pencuci mulut, tetapi pengalaman yang tidak terlupakan.',
-                about_p3: 'Kami mempercayai perolehan yang lestari dan bekerja terus dengan petani koko untuk memastikan amalan perdagangan yang adil sambil menghantar coklat paling istimewa ke meja anda.',
+                about_title: 'Tentang Ibu Ayu',
+                about_p1: 'Selamat datang ke Ibu Ayu Chocolate Moist, di mana semangat bertemu kesempurnaan dalam setiap gigitan. Sejak 2015, Ibu Ayu telah menghasilkan kek coklat istimewa menggunakan bahan-bahan terbaik dari seluruh dunia.',
+                about_p2: 'Pakar coklat Ibu Ayu menggabungkan teknik pembakaran tradisional dengan rasa-rasa inovatif untuk mencipta kek yang bukan sekadar pencuci mulut, tetapi pengalaman yang tidak terlupakan.',
+                about_p3: 'Ibu Ayu mempercayai perolehan yang lestari dan bekerja terus dengan petani koko untuk memastikan amalan perdagangan yang adil sambil menghantar coklat paling istimewa ke meja anda.',
                 pricing_title: 'Pilihan Harga',
                 p1_name: 'Saiz Penyerai', p1_size: '110ml — Sangat Kecil',
                 p1_f1: 'Sesuai untuk kali pertama', p1_f2: 'Kek coklat klasik', p1_f3: 'Cuba sebelum beli', p1_f4: 'Boleh ambil sendiri',
                 badge_bestseller: 'Terlaris',
                 p2_name: 'Kek Signature', p2_size: '700ml — Saiz Sederhana',
-                p2_f1: 'Mencukupi 4–6 orang', p2_f2: 'Lapisan coklat yang lembap', p2_f3: 'Kek paling laris kami', p2_f4: 'Penghantaran tempatan tersedia',
+                p2_f1: 'Mencukupi 4–6 orang', p2_f2: 'Lapisan coklat yang lembap', p2_f3: 'Kek paling laris Ibu Ayu', p2_f4: 'Penghantaran tempatan tersedia',
                 p3_name: 'Pra-Tempahan Khas', p3_size: 'Tempahan borong, majlis & acara', p3_price: 'Harga<br>Atas Permintaan',
                 p3_f1: 'Pra-tempahan borong & majlis', p3_f2: 'Kuantiti & saiz tersuai', p3_f3: 'Perkahwinan & perhimpunan', p3_f4: 'Pembungkusan peribadi',
                 btn_addcart: 'Tambah ke Troli', btn_viewall: 'Lihat Semua Kek', btn_requestorder: 'Hantar Pra-Tempahan',
-                testi_title: 'Apa Kata Pelanggan Kami',
+                testi_title: 'Apa Kata Pelanggan Ibu Ayu',
                 testi1: '"Sangat Hebat! Kek Triple Chocolate Delight menjadikan ulangtahun kami tidak terlupakan. Lapisan kek sungguh lembap dan rasanya luar biasa."',
                 testi2: '"Kek coklat terbaik yang pernah saya makan! Kualiti sangat tinggi dan anda boleh rasa bahan-bahan premium. Berbaloi setiap sen!"',
                 testi3: '"Pra-tempahan untuk hari jadi anak saya dan semua orang kagum. Ibu Ayu sudah jadi pilihan utama kami untuk majlis istimewa!"',
-                social_title: 'Ikuti Kami untuk Lebih Banyak',
-                social_desc: 'Dapatkan maklumat terkini tentang ciptaan terbaru, tawaran istimewa, dan kandungan di sebalik tabir. Sertai komuniti manis kami!',
+                social_title: 'Ikuti Ibu Ayu untuk Lebih Banyak',
+                social_desc: 'Dapatkan maklumat terkini tentang ciptaan terbaru Ibu Ayu, tawaran istimewa, dan kandungan di sebalik tabir. Sertai komuniti manis kami!',
                 btn_back: '← Kembali ke Utama', btn_backcart: '← Kembali ke Troli',
-                cakes_title: 'Koleksi Kek Lengkap Kami',
-                cakes_desc: 'Temui pelbagai kek coklat artisan kami. Setiap ciptaan dibuat dengan penuh semangat dan bahan-bahan terbaik.',
+                cakes_title: 'Koleksi Kek Lengkap Ibu Ayu',
+                cakes_desc: 'Temui pelbagai kek coklat artisan Ibu Ayu. Setiap ciptaan dibuat dengan penuh semangat dan bahan-bahan terbaik.',
                 sort_showing: 'Menunjukkan', sort_cakes: 'kek', sort_sortedby: 'Diisih mengikut:',
                 sort_plow: 'Harga: Rendah ke Tinggi', sort_phigh: 'Harga: Tinggi ke Rendah', sort_nasc: 'Nama: A ke Z', sort_ndesc: 'Nama: Z ke A',
-                cake_quickorder: 'Pra-Tempah Cepat', cake_addcart: 'Tambah ke Troli',
+                cake_quickorder: 'Pra-Tempah Cepat', cake_addcart: 'Tambah ke Troli', cake_seemore: 'Lihat Lagi',
                 order_title: 'Buat Pra-Tempahan Tersuai Anda', order_desc: 'Isi maklumat di bawah untuk membuat pra-tempahan kek coklat istimewa anda',
                 cart_title: 'Lengkapkan Pra-Tempahan Troli Anda', cart_desc: 'Sila berikan maklumat anda untuk melengkapkan pra-tempahan troli anda',
                 form_personal: 'Maklumat Peribadi', form_delivery: 'Maklumat Penghantaran', form_cakes: 'Pilihan Kek',
-                form_special: 'Arahan Khas', form_orderitems: 'Item Pra-Tempahan Anda',
+                form_special: 'Arahan Khas', form_orderitems: 'Item Pra-Tempahan Anda', form_addons: 'Tambahan',
                 form_name: 'Nama Penuh', form_email: 'E-mel', form_phone: 'Telefon', form_address: 'Alamat', form_date: 'Tarikh Penghantaran',
+                form_date_expected: 'Tarikh Penghantaran Dijangka', form_date_preorder: 'Tarikh Pra-Tempahan',
+                form_event: 'Jenis Acara', form_event_label: 'Untuk apakah pesanan ini?',
+                form_event_pick: '— Pilih jenis acara —',
+                form_event_family: 'Hari Keluarga', form_event_birthday: 'Parti Hari Jadi',
+                form_event_wedding: 'Cenderahati Perkahwinan', form_event_other: 'Lain-lain',
+                form_event_other_label: 'Sila huraikan', form_event_other_ph: 'Huraikan acara anda',
                 form_special_label: 'Sebarang permintaan khas',
                 btn_addcake: 'Tambah Kek Lain', btn_submit: 'Hantar Pra-Tempahan', btn_complete: 'Selesaikan Pra-Tempahan',
                 summary_title: 'Ringkasan Pra-Tempahan', summary_type: 'Jenis Pra-Tempahan', summary_cartorder: 'Pra-Tempahan Troli',
@@ -3764,7 +4002,7 @@
                 cart_empty: 'Troli anda kosong',
                 cart_checkout: 'Teruskan ke Pembayaran',
                 success_title: 'Pra-Tempahan Disahkan!',
-                success_desc: 'Terima kasih atas pra-tempahan anda! Kami akan menghubungi anda tidak lama lagi untuk mengesahkan butiran.',
+                success_desc: 'Terima kasih atas pra-tempahan anda! Ibu Ayu akan menghubungi anda tidak lama lagi untuk mengesahkan butiran.',
                 success_btn: 'Teruskan Membeli-belah',
                 cart_item_each: 'setiap satu',
                 cart_item_remove: 'Buang',
@@ -3847,10 +4085,36 @@
         // Init language on load
         setLanguage(currentLang);
 
-        // ===== NAVIGATION =====
-        function showSection(sectionId) { showSectionCore(sectionId); }
+        // ===== NAVIGATION WITH BROWSER HISTORY =====
+        let _navPushing = false;
 
-        function showCakesPage() { showSectionCore('cakesPage'); }
+        function showSection(sectionId, pushHistory = true) {
+            if (pushHistory && !_navPushing) {
+                history.pushState({ section: sectionId }, '', '#' + sectionId);
+            }
+            showSectionCore(sectionId);
+        }
+
+        function showCakesPage() { showSection('cakesPage'); }
+
+        window.addEventListener('popstate', (e) => {
+            _navPushing = true;
+            const state = e.state;
+            const section = state && state.section ? state.section : 'home';
+
+            if (section === 'productDetail' && state.cakeId != null) {
+                openProductDetail(state.cakeId, false);
+            } else if (section === 'contactPage') {
+                switchTab('contact');
+            } else if (section === 'cakesPage') {
+                switchTab('cakes');
+            } else if (section === 'home') {
+                switchTab('home');
+            } else {
+                showSectionCore(section);
+            }
+            _navPushing = false;
+        });
 
         function scrollToSection(sectionId) {
             if (document.getElementById('home').classList.contains('active')) {
@@ -3862,11 +4126,38 @@
         }
 
         // ===== CUSTOM ORDER =====
+        function toggleEventOther(sel) {
+            const group = document.getElementById('eventOtherGroup');
+            const desc = document.getElementById('eventOtherDesc');
+            if (!group) return;
+            const show = sel.value === 'other';
+            group.style.display = show ? 'block' : 'none';
+            if (desc) desc.required = show;
+
+            // Sync Pre-Order Type in sidebar
+            const eventLabels = {
+                'family-day': 'Family Day',
+                'birthday': 'Birthday Party',
+                'wedding': 'Wedding Doorgift',
+                'other': 'Special Order'
+            };
+            const label = sel.value ? (eventLabels[sel.value] || sel.value) : 'Custom Order';
+            currentPackage = label;
+            const packageEl = document.getElementById('packageType');
+            if (packageEl) packageEl.textContent = label;
+        }
+
         function showCustomOrder(packageType, packagePrice) {
-            currentPackage = packageType || 'Custom Order';
+            currentPackage = 'Custom Order';
             currentPackagePrice = packagePrice || 0;
             resetCakeSelections();
+            resetFormAddons();
             addCakeSelection();
+            // Reset event type dropdown
+            const evtSel = document.getElementById('eventType');
+            if (evtSel) { evtSel.value = ''; }
+            const evtOther = document.getElementById('eventOtherGroup');
+            if (evtOther) evtOther.style.display = 'none';
             updateOrderSummary();
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
@@ -3949,6 +4240,121 @@
             if (c) c.innerHTML = '';
         }
 
+        // ===== ADD-ONS IN FORMS =====
+        // Shared state for form add-ons (separate from product detail addonSelections)
+        let formAddonSelections = {}; // { [addonId]: { qty, variant } }
+
+        function renderFormAddons(containerId, summaryId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const t = translations[currentLang];
+            container.innerHTML = addonCatalog.map(addon => {
+                const sel = formAddonSelections[addon.id] || { qty: 0, variant: addon.variants[0] };
+                const name = currentLang === 'ms' ? addon.nameMs : addon.nameEn;
+                const isSelected = sel.qty > 0;
+                const variantChips = addon.variants.map(v =>
+                    `<button class="addon-variant-chip ${sel.variant === v ? 'active' : ''}"
+                        onclick="formAddonSelectVariant('${addon.id}','${v}',this,'${containerId}','${summaryId}')">${v}</button>`
+                ).join('');
+                return `
+                <div class="form-addon-row ${isSelected ? 'selected' : ''}" id="form-addon-${containerId}-${addon.id}">
+                    <img src="${addon.image}" alt="${name}" class="form-addon-img">
+                    <div class="form-addon-info">
+                        <span class="form-addon-name">${name}</span>
+                        <span class="form-addon-price">+ RM${addon.price.toFixed(2)} each</span>
+                        <div class="addon-variant-row" style="margin-top:6px;">${variantChips}</div>
+                    </div>
+                    <div class="form-addon-controls">
+                        <button type="button" class="addon-qty-btn" onclick="formAddonQtyChange('${addon.id}',-1,'${containerId}','${summaryId}')">−</button>
+                        <span class="addon-qty-val" id="form-addon-qty-${containerId}-${addon.id}">${sel.qty}</span>
+                        <button type="button" class="addon-qty-btn" onclick="formAddonQtyChange('${addon.id}',1,'${containerId}','${summaryId}')">+</button>
+                    </div>
+                </div>`;
+            }).join('');
+            updateFormAddonSummary(summaryId);
+        }
+
+        function formAddonQtyChange(addonId, delta, containerId, summaryId) {
+            if (!formAddonSelections[addonId]) {
+                const addon = addonCatalog.find(a => a.id === addonId);
+                formAddonSelections[addonId] = { qty: 0, variant: addon.variants[0] };
+            }
+            formAddonSelections[addonId].qty = Math.max(0, formAddonSelections[addonId].qty + delta);
+            const qtyEl = document.getElementById(`form-addon-qty-${containerId}-${addonId}`);
+            if (qtyEl) qtyEl.textContent = formAddonSelections[addonId].qty;
+            const rowEl = document.getElementById(`form-addon-${containerId}-${addonId}`);
+            if (rowEl) rowEl.classList.toggle('selected', formAddonSelections[addonId].qty > 0);
+            updateFormAddonSummary(summaryId);
+        }
+
+        function formAddonSelectVariant(addonId, variant, btn, containerId, summaryId) {
+            if (!formAddonSelections[addonId]) {
+                const addon = addonCatalog.find(a => a.id === addonId);
+                formAddonSelections[addonId] = { qty: 0, variant };
+            }
+            formAddonSelections[addonId].variant = variant;
+            btn.closest('.addon-variant-row').querySelectorAll('.addon-variant-chip').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function updateFormAddonSummary(summaryId) {
+            if (!summaryId) return;
+            const el = document.getElementById(summaryId);
+            if (!el) return;
+            let html = '';
+            addonCatalog.forEach(addon => {
+                const sel = formAddonSelections[addon.id];
+                if (sel && sel.qty > 0) {
+                    const name = currentLang === 'ms' ? addon.nameMs : addon.nameEn;
+                    const sub = sel.qty * addon.price;
+                    html += `<div class="order-summary-item order-summary-addon"><span>&nbsp;&nbsp;+ ${name} × ${sel.qty}</span><span>RM${sub.toFixed(2)}</span></div>`;
+                }
+            });
+            el.innerHTML = html;
+            // Recalculate totals including addons
+            if (summaryId === 'orderAddonsSummary') _recalcCustomOrderTotal();
+            if (summaryId === 'cartAddonsSummary') _recalcCartTotal();
+        }
+
+        function _recalcCustomOrderTotal() {
+            const cakeSub = cakeSelections.reduce((s, c) => s + getCakePrice(c.flavor) * c.quantity, 0);
+            const addonSub = getFormAddonTotal();
+            const subtotal = cakeSub + addonSub;
+            const tax = subtotal * 0.08;
+            const ta = document.getElementById('taxAmount');
+            const ot = document.getElementById('orderTotal');
+            if (ta) ta.textContent = `RM${tax.toFixed(2)}`;
+            if (ot) ot.textContent = `RM${(subtotal + tax).toFixed(2)}`;
+        }
+
+        function _recalcCartTotal() {
+            const cartSub = cartGroups.reduce((s, g) => {
+                if (g.type === 'detail') {
+                    s += g.cakePrice * g.cakeQty;
+                    (g.addons || []).forEach(a => s += a.price * a.qty);
+                } else { s += g.price * g.quantity; }
+                return s;
+            }, 0);
+            const addonSub = getFormAddonTotal();
+            const subtotal = cartSub + addonSub;
+            const tax = subtotal * 0.08;
+            const ta = document.getElementById('cartTaxAmount');
+            const ot = document.getElementById('cartOrderTotal');
+            if (ta) ta.textContent = `RM${tax.toFixed(2)}`;
+            if (ot) ot.textContent = `RM${(subtotal + tax).toFixed(2)}`;
+        }
+
+        function getFormAddonTotal() {
+            return addonCatalog.reduce((s, addon) => {
+                const sel = formAddonSelections[addon.id];
+                return s + (sel ? sel.qty * addon.price : 0);
+            }, 0);
+        }
+
+        function resetFormAddons() {
+            formAddonSelections = {};
+        }
+
         function updateOrderSummary() {
             const el = document.getElementById('packageType');
             if (el) el.textContent = currentPackage || '-';
@@ -3961,18 +4367,19 @@
             });
             const s = document.getElementById('orderItemsSummary');
             if (s) s.innerHTML = itemsHTML;
+            subtotal += getFormAddonTotal();
             const tax = subtotal * 0.08;
-            const total = subtotal + tax;
             const ta = document.getElementById('taxAmount');
             const ot = document.getElementById('orderTotal');
             if (ta) ta.textContent = `RM${tax.toFixed(2)}`;
-            if (ot) ot.textContent = `RM${total.toFixed(2)}`;
+            if (ot) ot.textContent = `RM${(subtotal + tax).toFixed(2)}`;
         }
 
         // ===== CART CHECKOUT =====
         function proceedToCartCheckout() {
             if (cartGroups.length === 0) { showNotification('Your cart is empty!'); return; }
             toggleCartModal();
+            resetFormAddons();
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
             const d = document.getElementById('cartDeliveryDate');
@@ -3986,51 +4393,86 @@
             const itemsSummary = document.getElementById('cartOrderItemsSummary');
             if (!itemsDisplay || !itemsSummary) return;
 
-            const cartItems = cartFlat();
             let displayHTML = '', summaryHTML = '', subtotal = 0;
 
-            cartItems.forEach((item, i) => {
-                const t = item.price * item.quantity;
-                subtotal += t;
-                const opts = allCakes.map(c =>
-                    `<option value="${c.name}" data-price="${c.price}" ${c.name === item.name ? 'selected' : ''}>${c.name} - RM${c.price}</option>`
-                ).join('');
-                displayHTML += `
-                <div class="cake-selection-row" style="display:block; margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid var(--border-light);">
-                    <div class="form-group" style="margin-bottom:12px;">
-                        <label>Cake Flavor</label>
-                        <select onchange="cartCheckoutChangeFlavor(${i}, this)">${opts}</select>
-                    </div>
-                    <div class="form-group" style="margin-bottom:12px;">
-                        <label>Quantity</label>
-                        <div class="quantity-controls">
-                            <button type="button" class="quantity-btn" onclick="cartCheckoutUpdateQty(${i}, -1)">-</button>
-                            <span class="quantity-display">${item.quantity}</span>
-                            <button type="button" class="quantity-btn" onclick="cartCheckoutUpdateQty(${i}, 1)">+</button>
-                        </div>
-                    </div>
-                    <button type="button" class="remove-cake-btn" style="width:100%;" onclick="cartCheckoutRemove(${i})">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>`;
-                summaryHTML += `<div class="order-summary-item"><span>${item.name} × ${item.quantity}</span><span>RM${t.toFixed(2)}</span></div>`;
-            });
+            if (cartGroups.length === 0) {
+                displayHTML = '<p style="color:var(--text-medium);text-align:center;margin-bottom:16px;">No items in cart.</p>';
+            } else {
+                cartGroups.forEach((g, gi) => {
+                    let groupSub = 0;
+                    let addonsInfo = '';
+                    let itemLabel = '';
 
-            if (cartItems.length === 0) {
-                displayHTML = '<p style="color: var(--text-medium); text-align: center; margin-bottom:16px;">No items in cart.</p>';
-                summaryHTML = '';
+                    if (g.type === 'detail') {
+                        groupSub += g.cakePrice * g.cakeQty;
+                        itemLabel = `${g.cakeName} × ${g.cakeQty}`;
+                        summaryHTML += `<div class="order-summary-item"><span>${itemLabel}</span><span>RM${(g.cakePrice*g.cakeQty).toFixed(2)}</span></div>`;
+                        (g.addons||[]).forEach(a => {
+                            groupSub += a.price * a.qty;
+                            addonsInfo += `<div class="checkout-addon-line">+ ${a.name} × ${a.qty} — RM${(a.price*a.qty).toFixed(2)}</div>`;
+                            summaryHTML += `<div class="order-summary-item order-summary-addon"><span>&nbsp;&nbsp;+ ${a.name} × ${a.qty}</span><span>RM${(a.price*a.qty).toFixed(2)}</span></div>`;
+                        });
+                    } else {
+                        groupSub += g.price * g.quantity;
+                        itemLabel = `${g.name} × ${g.quantity}`;
+                        summaryHTML += `<div class="order-summary-item"><span>${itemLabel}</span><span>RM${(g.price*g.quantity).toFixed(2)}</span></div>`;
+                    }
+                    subtotal += groupSub;
+
+                    displayHTML += `
+                    <div class="checkout-group-card">
+                        <div class="checkout-group-header">
+                            <span class="checkout-group-label">${g.type==='detail' ? g.cakeName : g.name}</span>
+                            <span class="checkout-group-sub">RM${groupSub.toFixed(2)}</span>
+                        </div>
+                        ${g.type==='detail' ? `<div class="checkout-group-qty-row">
+                            <span>Qty:</span>
+                            <div class="quantity-controls" style="display:inline-flex;">
+                                <button type="button" class="quantity-btn" onclick="cgCheckoutCakeQty(${gi},-1)">-</button>
+                                <span class="quantity-display">${g.cakeQty}</span>
+                                <button type="button" class="quantity-btn" onclick="cgCheckoutCakeQty(${gi},1)">+</button>
+                            </div>
+                        </div>${addonsInfo}` : `<div class="checkout-group-qty-row">
+                            <span>Qty:</span>
+                            <div class="quantity-controls" style="display:inline-flex;">
+                                <button type="button" class="quantity-btn" onclick="cgCheckoutSimpleQty(${gi},-1)">-</button>
+                                <span class="quantity-display">${g.quantity}</span>
+                                <button type="button" class="quantity-btn" onclick="cgCheckoutSimpleQty(${gi},1)">+</button>
+                            </div>
+                        </div>`}
+                        <button type="button" class="remove-cake-btn" style="width:100%;margin-top:10px;" onclick="cgCheckoutRemove(${gi})">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </div>`;
+                });
             }
 
-            displayHTML += `
-                <button type="button" class="add-another-cake-btn" onclick="cartCheckoutAddCake()">
-                    <i class="fas fa-plus"></i> Add Another Cake
-                </button>`;
+            displayHTML += `<button type="button" class="add-another-cake-btn" onclick="cartCheckoutAddCake()">
+                <i class="fas fa-plus"></i> Add Another Cake
+            </button>`;
 
             itemsDisplay.innerHTML = displayHTML;
             itemsSummary.innerHTML = summaryHTML;
-            const tax = subtotal * 0.08;
+            const addonSub = getFormAddonTotal();
+            const tax = (subtotal + addonSub) * 0.08;
             document.getElementById('cartTaxAmount').textContent = `RM${tax.toFixed(2)}`;
-            document.getElementById('cartOrderTotal').textContent = `RM${(subtotal + tax).toFixed(2)}`;
+            document.getElementById('cartOrderTotal').textContent = `RM${(subtotal + addonSub + tax).toFixed(2)}`;
+        }
+
+        function cgCheckoutCakeQty(gi, d) {
+            const g = cartGroups[gi]; if (!g) return;
+            g.cakeQty = Math.max(1, g.cakeQty + d);
+            updateCartCount(); saveCart(); updateCartCheckoutDisplay();
+        }
+        function cgCheckoutSimpleQty(gi, d) {
+            const g = cartGroups[gi]; if (!g) return;
+            g.quantity = Math.max(0, g.quantity + d);
+            if (g.quantity === 0) cartGroups.splice(gi, 1);
+            updateCartCount(); saveCart(); updateCartCheckoutDisplay();
+        }
+        function cgCheckoutRemove(gi) {
+            cartGroups.splice(gi, 1);
+            updateCartCount(); saveCart(); updateCartCheckoutDisplay();
         }
 
         function cartCheckoutChangeFlavor(index, select) {
@@ -4103,25 +4545,38 @@
             const address = document.getElementById('deliveryAddress').value.trim();
             const deliveryDate = document.getElementById('deliveryDate').value;
             const specialInstructions = document.getElementById('specialInstructions').value.trim();
+            const eventTypeEl = document.getElementById('eventType');
+            const eventType = eventTypeEl ? eventTypeEl.value : '';
+            const eventOtherEl = document.getElementById('eventOtherDesc');
+            const eventOther = eventOtherEl ? eventOtherEl.value.trim() : '';
+            const eventLabel = eventType === 'other' ? `Other: ${eventOther}` : eventType;
             if (!name || !email || !phone || !address || !deliveryDate) { showNotification('Please fill in all required fields.'); return; }
+            if (!eventType) { showNotification('Please select an event type.'); return; }
+            if (eventType === 'other' && !eventOther) { showNotification('Please describe your event type.'); return; }
             if (!validateEmail(email)) { showNotification('Please enter a valid email address.'); return; }
             if (cakeSelections.length === 0) { showNotification('Please add at least one cake.'); return; }
-            const subtotal = cakeSelections.reduce((s, c) => s + getCakePrice(c.flavor) * c.quantity, 0);
+            const cakeSub = cakeSelections.reduce((s, c) => s + getCakePrice(c.flavor) * c.quantity, 0);
+            const addonSub = getFormAddonTotal();
+            const subtotal = cakeSub + addonSub;
             const tax = subtotal * 0.08;
-            const orderData = { 
-                timestamp: new Date().toISOString(), 
-                orderType: 'custom', 
-                customerName: name, 
-                customerEmail: email, 
-                customerPhone: phone, 
-                deliveryAddress: address, 
-                deliveryDate, 
-                packageType: currentPackage, 
-                specialInstructions, 
-                cakes: JSON.stringify(cakeSelections.map(c => ({ flavor: c.flavor, quantity: c.quantity, price: getCakePrice(c.flavor) }))), 
-                subtotal: subtotal.toFixed(2), 
-                tax: tax.toFixed(2), 
-                total: (subtotal + tax).toFixed(2) 
+            const formAddonsArr = addonCatalog.filter(a => formAddonSelections[a.id] && formAddonSelections[a.id].qty > 0)
+                .map(a => ({ name: currentLang === 'ms' ? a.nameMs : a.nameEn, qty: formAddonSelections[a.id].qty, variant: formAddonSelections[a.id].variant, price: a.price }));
+            const orderData = {
+                timestamp: new Date().toISOString(),
+                orderType: 'custom',
+                customerName: name,
+                customerEmail: email,
+                customerPhone: phone,
+                deliveryAddress: address,
+                deliveryDate,
+                packageType: currentPackage,
+                eventType: eventLabel,
+                specialInstructions,
+                cakes: JSON.stringify(cakeSelections.map(c => ({ flavor: c.flavor, quantity: c.quantity, price: getCakePrice(c.flavor) }))),
+                addons: JSON.stringify(formAddonsArr),
+                subtotal: subtotal.toFixed(2),
+                tax: tax.toFixed(2),
+                total: (subtotal + tax).toFixed(2)
             };
             const btn = document.getElementById('submitOrderBtn');
             const orig = btn.innerHTML;
@@ -4132,10 +4587,11 @@
                 document.getElementById('successModal').classList.add('active');
                 document.getElementById('customOrderForm').reset();
                 resetCakeSelections();
+                resetFormAddons();
                 addCakeSelection();
                 saveOrderToLocalStorage(orderData);
             } catch (e) {
-                showNotification("Order saved locally. We'll process it shortly.");
+                showNotification("Order saved locally. Ibu Ayu will process it shortly.");
                 saveOrderToLocalStorage(orderData);
             } finally {
                 btn.innerHTML = orig;
@@ -4154,8 +4610,12 @@
             if (!validateEmail(email)) { showNotification('Please enter a valid email address.'); return; }
             if (cartGroups.length === 0) { showNotification('Your cart is empty!'); return; }
             const flat = cartFlat();
-            const subtotal = flat.reduce((s, i) => s + i.price * i.quantity, 0);
+            const cartSub = flat.reduce((s, i) => s + i.price * i.quantity, 0);
+            const addonSub = getFormAddonTotal();
+            const subtotal = cartSub + addonSub;
             const tax = subtotal * 0.08;
+            const formAddonsArr = addonCatalog.filter(a => formAddonSelections[a.id] && formAddonSelections[a.id].qty > 0)
+                .map(a => ({ name: currentLang === 'ms' ? a.nameMs : a.nameEn, qty: formAddonSelections[a.id].qty, variant: formAddonSelections[a.id].variant, price: a.price }));
             const orderData = { 
                 timestamp: new Date().toISOString(), 
                 orderType: 'cart', 
@@ -4166,7 +4626,8 @@
                 deliveryDate, 
                 specialInstructions, 
                 items: flat.map(i => `• ${i.name}\n  Qty: ${i.quantity}\n  Price: RM${(i.price * i.quantity).toFixed(2)}`).join('\n\n'), 
-                cartData: JSON.stringify(flat), 
+                cartData: JSON.stringify(flat),
+                addons: JSON.stringify(formAddonsArr),
                 subtotal: subtotal.toFixed(2), 
                 tax: tax.toFixed(2), 
                 total: (subtotal + tax).toFixed(2) 
@@ -4179,12 +4640,13 @@
                 await submitToGoogleSheets(orderData);
                 document.getElementById('successModal').classList.add('active');
                 cartGroups = [];
+                resetFormAddons();
                 updateCartCount();
                 saveCart();
                 document.getElementById('cartCheckoutForm').reset();
                 saveOrderToLocalStorage(orderData);
             } catch (e) {
-                showNotification("Order saved locally. We'll process it shortly.");
+                showNotification("Order saved locally. Ibu Ayu will process it shortly.");
                 saveOrderToLocalStorage(orderData);
             } finally {
                 btn.innerHTML = orig;
@@ -4589,7 +5051,10 @@
             showNotification(currentLang === 'ms' ? 'Ditambah ke troli!' : 'Added to cart!');
         }
 
-        function openProductDetail(cakeId) {
+        function openProductDetail(cakeId, pushHistory = true) {
+            if (pushHistory && !_navPushing) {
+                history.pushState({ section: 'productDetail', cakeId }, '', '#productDetail-' + cakeId);
+            }
             const cake = allCakes.find(c => c.id === cakeId);
             if (!cake) return;
             pdCurrentCake = cake;
@@ -4661,12 +5126,27 @@
         function pdAddToCart() {
             if (!pdCurrentCake) return;
             const qty = pdQty > 0 ? pdQty : 1;
-            cartGroups.push({ type: 'detail', cakeName: pdCurrentCake.name, cakePrice: pdCurrentCake.price, cakeQty: qty, addons: [] });
+            // Collect any pending addon selections
+            const addons = addonCatalog
+                .filter(addon => addonSelections[addon.id] && addonSelections[addon.id].qty > 0)
+                .map(addon => {
+                    const sel = addonSelections[addon.id];
+                    const name = `${currentLang === 'ms' ? addon.nameMs : addon.nameEn} (${sel.variant})`;
+                    return { name, price: addon.price, qty: sel.qty, variant: sel.variant };
+                });
+            cartGroups.push({ type: 'detail', cakeName: pdCurrentCake.name, cakePrice: pdCurrentCake.price, cakeQty: qty, addons });
             pdQty = 0;
+            addonSelections = {};
             document.getElementById('pdQtyVal').textContent = 0;
+            updateAddonTrigger();
             updateCartCount();
             saveCart();
             showNotification(currentLang === 'ms' ? 'Ditambah ke troli!' : 'Added to cart!');
+        }
+
+        function pdQuickOrder() {
+            if (!pdCurrentCake) return;
+            quickOrderCake(pdCurrentCake.name);
         }
 
         function pdToggleAccordion(el) {
@@ -4748,6 +5228,7 @@
             if (!grid) return;
             const sorted = sortCakeArray(allCakes, currentSort);
             const t = translations[currentLang];
+            const isMobile = window.innerWidth <= 768;
             grid.innerHTML = sorted.map(cake => `
                 <div class="cake-card" onclick="openProductDetail(${cake.id})" style="cursor:pointer;">
                     <div class="cake-image">
@@ -4759,8 +5240,12 @@
                         <div class="cake-details">
                             <div class="cake-price">RM${cake.price.toFixed(2)}</div>
                             <div class="cake-actions">
+                                ${isMobile ? `
                                 <button class="quick-order-btn" onclick="event.stopPropagation();quickOrderCake('${cake.name}')">${t.cake_quickorder || 'Quick Pre-Order'}</button>
                                 <button class="cake-add-to-cart" onclick="event.stopPropagation();addToCart('${cake.name}', ${cake.price})">${t.cake_addcart || 'Add to Cart'}</button>
+                                ` : `
+                                <button class="cake-seemore-btn" onclick="event.stopPropagation();openProductDetail(${cake.id})">${t.cake_seemore || 'See More'}</button>
+                                `}
                             </div>
                         </div>
                     </div>
@@ -4771,20 +5256,22 @@
         }
 
         function quickOrderCake(name) {
-            showCustomOrder('Family Size', 45);
-            setTimeout(() => {
-                const lastCake = cakeSelections[cakeSelections.length - 1];
-                if (lastCake) updateCakeSelection(lastCake.id, 'flavor', name);
-                renderCakeSelections();
-                updateOrderSummary();
-            }, 100);
-            showNotification(`Added "${name}" to order form`);
+            const cake = allCakes.find(c => c.name === name);
+            if (cake) {
+                cartGroups.push({ type: 'detail', cakeName: cake.name, cakePrice: cake.price, cakeQty: 1, addons: [] });
+                updateCartCount();
+                saveCart();
+            }
+            proceedToCartCheckout();
         }
 
         // ===== TAB BAR =====
         function switchTab(tab) {
             document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
             document.getElementById('tab-' + tab).classList.add('active');
+
+            const sectionId = tab === 'contact' ? 'contactPage' : tab === 'cakes' ? 'cakesPage' : 'home';
+            if (!_navPushing) history.pushState({ section: sectionId }, '', '#' + sectionId);
 
             const header = document.querySelector('header');
             const contactEl = document.getElementById('contactPage');
@@ -4793,16 +5280,13 @@
                 showSectionCore('contactPage');
                 header.classList.add('contact-mode');
                 header.classList.remove('header-visible');
-                // On mobile the contact page is position:fixed and scrolls itself
                 const isMobile = window.innerWidth <= 768;
                 const scrollTarget = isMobile ? contactEl : window;
                 scrollTarget.addEventListener('scroll', handleContactScroll);
-                // Store reference so we can remove it later
                 header._contactScrollTarget = scrollTarget;
                 header._contactScrollHandler = handleContactScroll;
             } else {
                 header.classList.remove('contact-mode', 'header-visible');
-                // Clean up scroll listener
                 if (header._contactScrollTarget) {
                     header._contactScrollTarget.removeEventListener('scroll', header._contactScrollHandler);
                     header._contactScrollTarget = null;
@@ -4831,11 +5315,15 @@
             document.getElementById(sectionId).classList.add('active');
             window.scrollTo(0, 0);
             if (sectionId === 'cakesPage') setTimeout(() => populateCakesGrid(), 100);
-            if (sectionId === 'cartCheckout') updateCartCheckoutDisplay();
+            if (sectionId === 'cartCheckout') {
+                updateCartCheckoutDisplay();
+                setTimeout(() => renderFormAddons('cartOrderAddonsDisplay', 'cartAddonsSummary'), 50);
+            }
             if (sectionId !== 'customOrder' && sectionId !== 'cartCheckout') {
                 resetCakeSelections();
             } else if (sectionId === 'customOrder') {
                 if (cakeSelections.length === 0) addCakeSelection();
+                setTimeout(() => renderFormAddons('customOrderAddonsDisplay', 'orderAddonsSummary'), 50);
             }
             // Sync tab highlight
             const map = { home: 'home', cakesPage: 'cakes', contactPage: 'contact', productDetail: 'cakes' };
@@ -4863,6 +5351,16 @@
 
         function validateEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
 
+        // Re-render cakes grid on resize so desktop/mobile buttons switch correctly
+        let _resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(_resizeTimer);
+            _resizeTimer = setTimeout(() => {
+                const grid = document.getElementById('cakesGrid');
+                if (grid && grid.children.length > 0) populateCakesGrid();
+            }, 200);
+        });
+
         // ===== INIT =====
         window.addEventListener('load', () => {
             // cartGroups already loaded at declaration time from localStorage
@@ -4871,12 +5369,22 @@
             document.querySelectorAll('.contactFooterYear').forEach(el => el.textContent = new Date().getFullYear());
 
             const hash = window.location.hash.substring(1);
-            if (hash === 'customOrder' || hash === 'cakesPage' || hash === 'cartCheckout') {
-                showSection(hash);
+            if (hash.startsWith('productDetail-')) {
+                const cakeId = parseInt(hash.split('-')[1]);
+                if (cakeId) {
+                    history.replaceState({ section: 'home' }, '', '#home');
+                    showSectionCore('home');
+                    openProductDetail(cakeId);
+                } else { showSection('home', false); history.replaceState({ section: 'home' }, '', '#home'); }
+            } else if (hash === 'customOrder' || hash === 'cakesPage' || hash === 'cartCheckout') {
+                history.replaceState({ section: hash }, '', '#' + hash);
+                showSectionCore(hash);
             } else if (hash === 'contactPage') {
+                history.replaceState({ section: 'contactPage' }, '', '#contactPage');
                 switchTab('contact');
             } else {
-                showSection('home');
+                history.replaceState({ section: 'home' }, '', '#home');
+                showSectionCore('home');
             }
 
             const tomorrow = new Date();
@@ -4890,4 +5398,3 @@
     <script src="asset-loader.js"></script>
 </body>
 </html>
-
